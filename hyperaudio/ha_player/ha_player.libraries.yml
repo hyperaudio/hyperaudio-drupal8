@@ -1,0 +1,8 @@
+ha_player.player:
+  css:
+    component:
+      css/hyperaudio-lite-player.css: {}
+  js:
+    js/twitter.widget.js: {}
+    js/hyperaudio-lite.js: {}
+    js/hyperaudio-lite-wrapper.js: {}

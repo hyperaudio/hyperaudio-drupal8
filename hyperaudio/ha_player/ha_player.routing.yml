@@ -1,0 +1,15 @@
+ha_player.info:
+  path: '/hyperaudio/player/info'
+  defaults:
+    _title: 'HA Player Information'
+    _controller: '\Drupal\ha_player\Controller\HaPlayerController::info'
+  requirements:
+    _permission: 'access content'
+
+ha_player.player:
+  path: '/hyperaudio/player'
+  defaults:
+    _title: 'HA Player: Player'
+    _controller: '\Drupal\ha_player\Controller\HaPlayerController::getHaPlayer'
+  requirements:
+    _permission: 'access content'

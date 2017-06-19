@@ -1,0 +1,11 @@
+# Define default links for this module.
+ha_player.info:
+  title: A Hyperaudio Example
+  description: This is a Hyperaudio Example
+  route_name: ha_player.info
+
+ha_player.player:
+  title: Interactive Player
+  description: Interactive Transcript Player
+  route_name: ha_player.player
+  parent: ha_player.info

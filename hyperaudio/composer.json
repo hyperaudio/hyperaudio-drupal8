@@ -1,0 +1,12 @@
+{
+  "name": "drupal/hyperaudio",
+  "description": "Hyperaudio functionality.",
+  "type": "drupal-module",
+  "homepage": "https://github.com/hyperaudio/drupal",
+  "support": {
+    "issues": "https://github.com/hyperaudio/drupal",
+    "documentation": "https://github.com/hyperaudio/drupal",
+    "source": "https://github.com/hyperaudio/drupal"
+  },
+  "license": "MIT"
+}

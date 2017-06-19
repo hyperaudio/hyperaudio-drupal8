@@ -1,0 +1,7 @@
+name: Hyperaudio for Drupal
+type: module
+description: 'Drupal Modules for key Hyperaudio Functionality'
+package: Hyperaudio modules
+core: 8.x
+dependencies:
+  - drupal:toolbar
