@@ -21,21 +21,8 @@ class HaPlayerController extends ControllerBase {
     $build['content'] = [
       'first_line' => [
         '#prefix' => '<p>',
-        '#markup' => 'Drupal includes jQuery and jQuery UI.',
+        '#markup' => 'Hyperaudio Interactive Transcript Player',
         '#suffix' => '</p>',
-      ],
-      'second_line' => [
-        '#prefix' => '<p>',
-        '#markup' => 'We have two examples of using these:',
-        '#suffix' => '</p>',
-      ],
-      'examples_list' => [
-        '#theme' => 'item_list',
-        '#items' => [
-          'An accordion-style section reveal effect. This demonstrates calling a jQuery UI function using Drupal&#39;s rendering system.',
-          'Sorting according to numeric &#39;weight.&#39; This demonstrates attaching your own JavaScript code to individual page elements using Drupal&#39;s rendering system.',
-        ],
-        '#type' => 'ol',
       ],
     ];
 
@@ -66,26 +53,44 @@ class HaPlayerController extends ControllerBase {
 
   public function getHaPlayer() {
 
-    $transcriptId = $_GET['transcript'];
+    //db_query("DELETE FROM {cache};");
 
-    $json = json_decode($this->getApiData('transcripts',$transcriptId));
+    $transcriptId = \Drupal::request()->query->get('transcript');
 
-    $transcript = $json->{'content'};
-    $media = $json->{'media'}->{'source'}->{'mp4'}->{'url'};
-    $title = $json->{'media'}->{'label'};
+    if ($transcriptId !== null) {
 
-    $build['myelement'] = array(
-      '#theme' => 'ha_player_player',
-      '#transcript' => $transcript,
-      '#media' => $media,
-      '#title' => $title,
-    );
+      $json = json_decode($this->getApiData('transcripts',$transcriptId));
+
+      $transcript = $json->{'content'};
+      $media = $json->{'media'}->{'source'}->{'mp4'}->{'url'};
+      $title = $json->{'media'}->{'label'};
+
+      $build['myelement'] = array(
+        '#theme' => 'ha_player_player',
+        '#transcript' => $transcript,
+        '#media' => $media,
+        '#title' => $title,
+      );
+
+    } else {
+
+      $build['myelement'] = array(
+        '#theme' => 'ha_player_player',
+        '#transcript' => "no transcript found",
+        '#media' => "",
+        '#title' => "no transcript found",
+      );
+
+    }
+
     // Add our script. It is tiny, but this demonstrates how to add it. We pass
     // our module name followed by the internal library name declared in
     // libraries yml file.
     $build['myelement']['#attached']['library'][] = 'ha_player/ha_player.player';
     // Return the renderable array.
     return $build;
+
+
   }
 
 }

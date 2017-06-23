@@ -19,17 +19,15 @@ class HyperaudioTest extends HyperaudioBrowserTestBase {
   /**
    * Test all the paths defined by our module.
    */
-  public function testJsExample() {
+  public function testHyperaudio() {
     $assert = $this->assertSession();
 
     $paths = [
-      'hyperaudio/ha-player',
-      'hyperaudio/ha-player/player',
+      'hyperaudio/player',
     ];
     foreach ($paths as $path) {
       $this->drupalGet($path);
       $assert->statusCodeEquals(200);
     }
   }
-
 }
