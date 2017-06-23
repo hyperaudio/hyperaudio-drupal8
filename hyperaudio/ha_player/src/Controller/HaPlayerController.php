@@ -3,6 +3,7 @@
 namespace Drupal\ha_player\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller for js_example pages.
@@ -51,11 +52,11 @@ class HaPlayerController extends ControllerBase {
   }
 
 
-  public function getHaPlayer() {
+  public function getHaPlayer(Request $request, $transcriptId) {
 
     //db_query("DELETE FROM {cache};");
 
-    $transcriptId = \Drupal::request()->query->get('transcript');
+    //$transcriptId = \Drupal::request()->query->get('transcript');
 
     if ($transcriptId !== null) {
 
@@ -65,23 +66,20 @@ class HaPlayerController extends ControllerBase {
       $media = $json->{'media'}->{'source'}->{'mp4'}->{'url'};
       $title = $json->{'media'}->{'label'};
 
-      $build['myelement'] = array(
-        '#theme' => 'ha_player_player',
-        '#transcript' => $transcript,
-        '#media' => $media,
-        '#title' => $title,
-      );
-
     } else {
 
-      $build['myelement'] = array(
-        '#theme' => 'ha_player_player',
-        '#transcript' => "no transcript found",
-        '#media' => "",
-        '#title' => "no transcript found",
-      );
+      $transcript = $transcript;
+      $media = "";
+      $title = "no transcript found";
 
     }
+
+    $build['myelement'] = array(
+      '#theme' => 'ha_player_player',
+      '#transcript' => $transcript,
+      '#media' => $media,
+      '#title' => $title,
+    );
 
     // Add our script. It is tiny, but this demonstrates how to add it. We pass
     // our module name followed by the internal library name declared in
@@ -89,8 +87,5 @@ class HaPlayerController extends ControllerBase {
     $build['myelement']['#attached']['library'][] = 'ha_player/ha_player.player';
     // Return the renderable array.
     return $build;
-
-
   }
-
 }
