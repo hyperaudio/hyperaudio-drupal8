@@ -27,7 +27,7 @@ function ha_player_theme() {
   return array(
     'ha_player_player' => array(
       'template' => 'player',
-      'variables' => array('transcript' => NULL, 'media' => null, 'title' => null,),
+      'variables' => array('transcript' => NULL, 'media' => null, 'title' => null, 'variant' => null,),
     ),
   );
 }

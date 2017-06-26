@@ -52,7 +52,7 @@ class HaPlayerController extends ControllerBase {
   }
 
 
-  public function getHaPlayer(Request $request, $transcriptId) {
+  public function getHaPlayer(Request $request, $transcriptId, $variant) {
 
     //db_query("DELETE FROM {cache};");
 
@@ -79,6 +79,7 @@ class HaPlayerController extends ControllerBase {
       '#transcript' => $transcript,
       '#media' => $media,
       '#title' => $title,
+      '#variant' => $variant,
     );
 
     // Add our script. It is tiny, but this demonstrates how to add it. We pass
