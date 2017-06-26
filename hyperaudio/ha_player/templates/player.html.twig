@@ -182,9 +182,7 @@ var sharect = new Sharect();
         <video src="{{ media }}" type="audio/mp4" controls></video>
       </header>
 
-      <article>
-        {{ transcript | raw }}
-      </article>
+    {{ transcript | raw }}
     </section>
 
     <!-- Remixer -->
@@ -269,7 +267,7 @@ var sharect = new Sharect();
     });
 
   </script>
-<{% endif %}>
+{% endif %}
 
 
 
@@ -431,9 +429,7 @@ var sharect = new Sharect();
         <video src="{{ media }}" type="audio/mp4" controls></video>
       </header>
 
-      <article>
-        {{ transcript | raw }}
-      </article>
+    {{ transcript | raw }}
     </section>
 
   </main>
