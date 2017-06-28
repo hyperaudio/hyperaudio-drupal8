@@ -4,6 +4,7 @@ namespace Drupal\ha_pad\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Component\Utility\Html;
 
 /**
  * Controller for js_example pages.
@@ -54,10 +55,6 @@ class HaPadController extends ControllerBase {
 
   public function getHaPad(Request $request, $transcriptId, $variant) {
 
-    //db_query("DELETE FROM {cache};");
-
-    //$transcriptId = \Drupal::request()->query->get('transcript');
-
     if ($transcriptId !== null) {
 
       $json = json_decode($this->getApiData('transcripts',$transcriptId));
@@ -65,6 +62,18 @@ class HaPadController extends ControllerBase {
       $transcript = $json->{'content'};
       $media = $json->{'media'}->{'source'}->{'mp4'}->{'url'};
       $title = $json->{'media'}->{'label'};
+
+      // clean-up
+      $dom = Html::load($transcript);
+      $section = $dom->getElementsByTagName('section')->item(0);
+
+      $doc = $element->ownerDocument;
+      $transcript = '';
+
+      foreach ($section->childNodes as $node) {
+        $transcript .= $doc->saveHTML($node);
+      }
+      //
 
     } else {
 
