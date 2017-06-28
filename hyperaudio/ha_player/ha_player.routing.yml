@@ -3,6 +3,7 @@ ha_player.info:
   defaults:
     _title: 'HA Player Information'
     _controller: '\Drupal\ha_player\Controller\HaPlayerController::info'
+    transcriptId: 'eSYPgPdcTfObdONlwLIvOQ'
   requirements:
     _permission: 'access content'
 
