@@ -67,7 +67,7 @@ class HaPadController extends ControllerBase {
       $dom = Html::load($transcript);
       $section = $dom->getElementsByTagName('section')->item(0);
 
-      $doc = $element->ownerDocument;
+      $doc = $section->ownerDocument;
       $transcript = '';
 
       foreach ($section->childNodes as $node) {
