@@ -14,21 +14,3 @@ ha_player.player:
     variant: 'player'
   requirements:
     _permission: 'access content'
-
-ha_player.player2:
-  path: '/hyperaudio/player2/{transcriptId}'
-  defaults:
-    _title: 'HA Player: Player2'
-    _controller: '\Drupal\ha_player\Controller\HaPlayerController::getHaPlayer'
-    variant: 'player2'
-  requirements:
-    _permission: 'access content'
-
-ha_player.pad:
-  path: '/hyperaudio/pad/{transcriptId}'
-  defaults:
-    _title: 'HA Player: Pad'
-    _controller: '\Drupal\ha_player\Controller\HaPlayerController::getHaPlayer'
-    variant: 'pad'
-  requirements:
-    _permission: 'access content'

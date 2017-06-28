@@ -6,4 +6,3 @@ ha_player.player:
     js/twitter.widget.js: {}
     js/hyperaudio-lite.js: {}
     js/hyperaudio-lite-wrapper.js: {}
-    js/bundle.js: {}
