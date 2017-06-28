@@ -1,0 +1,101 @@
+/* hyperaudio styles */
+.hyperaudio-sink .hyperaudio-effect:focus {
+border-left: 2px solid #d74b36;
+outline: none;
+}
+
+.hyperaudio-source .hyperaudio-transcript {
+border-left: 1px solid transparent;
+border-right: 1px solid transparent;
+padding-left: 1em;
+padding-right: 1em;
+outline: none;
+}
+
+.hyperaudio-sink .hyperaudio-transcript {
+border-left: 1px solid transparent;
+border-right: 1px solid transparent;
+padding-left: 1em;
+padding-right: 1em;
+outline: none;
+}
+
+.hyperaudio-sink .hyperaudio-transcript:focus {
+border-left: 1px solid red;
+border-right: 1px solid transparent;
+padding-left: 1em;
+padding-right: 1em;
+outline: none;
+}
+
+.hyperaudio-transcript {
+border-top: 0 solid white;
+transition: border-top 0.15s;
+}
+
+.hyperaudio-sink .hyperaudio-transcript.hyperaudio-over {
+border-top: 2em solid #e9f8fb;
+transition: border-top 0.15s;
+}
+
+/* FIXME */
+.hyperaudio-sink article > div {
+height: 10em;
+background-color: transparent;
+transition: background-color 0.15s;
+}
+
+.hyperaudio-sink article.over > div {
+height: 10em;
+background-color: #e9f8fb;
+transition: background-color 0.15s;
+}
+
+.hyperaudio-player header, .hyperaudio-player video {
+max-width: 634px;
+max-height: 360px;
+margin-bottom: 2em;
+background-color: black;
+}
+
+.hyperaudio-player:not(.hyperaudio-source) *[data-t] {
+  cursor: pointer;
+}
+
+.hyperaudio-player video {
+width: 100%;
+}
+
+.hyperaudio-player p {
+color: #658898;
+margin: 0;
+padding: .5em 0;
+}
+
+.hyperaudio-player .hyperaudio-past {
+color: black;
+}
+
+.hyperaudio-player .hyperaudio-active {
+color: #d74b36;
+}
+
+.hyperaudio-player .hyperaudio-duration {
+border-bottom: 1px solid #d74b36;
+}
+
+.hyperaudio-source .hyperaudio-selected, hyperaudio-player .hyperaudio-active.hyperaudio-selected {
+/*background-color: lightpink;*/
+background: #87d8e7;
+text-shadow: none;
+/*color: white;*/
+}
+
+/*.hyperaudio-effect {
+background-color: #fafaff;
+padding: .5em;
+}
+
+.hyperaudio-effect input {
+width: 33%;
+}*/
