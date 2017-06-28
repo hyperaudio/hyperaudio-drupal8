@@ -1,0 +1,28 @@
+<h1>PAD: {{ title }}</h1>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.js"></script>
+<p>
+  <form id="searchForm" style="float:right">
+    <!-- comment out the following line if you don't need playback rate controls -->
+    Playback Rate <span id="currentPbr">1</span><input id="pbr" type="range" value="1" min="0.5" max="3" step="0.1" style="width:10%">
+    <input id="search" type="text" ><input type="submit" value="search">
+  </form>
+</p>
+
+<video id="hyperplayer" style="z-index: 5000000; position:relative; width:400px" src="{{ media }}" type="audio/mp4" controls></video>
+
+<div id="hypertranscript" style="overflow-y:scroll; height:600px; position:relative; border-style:dashed; border-width: 1px; border-color:#999; padding: 8px">
+  {{ transcript | raw }}
+</div>
+
+<script src="https://estevanmaito.github.io/sharect/sharect.min.js"></script>
+
+<script>
+var sharect = new Sharect();
+  sharect.config({
+    /*facebook: true,*/
+    twitter: true,
+    twitterUsername: '%23hashtag', /*hashtag example*/
+    /*backgroundColor: '#ff4081',*/
+    iconColor: '#fff'
+  }).init();
+</script>

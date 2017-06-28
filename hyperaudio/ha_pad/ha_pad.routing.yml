@@ -1,0 +1,25 @@
+ha_pad.info:
+  path: '/hyperaudio/pad/info'
+  defaults:
+    _title: 'HA Pad Information'
+    _controller: '\Drupal\ha_pad\Controller\HaPadController::info'
+  requirements:
+    _permission: 'access content'
+
+ha_pad.pad:
+  path: '/hyperaudio/pad/{transcriptId}'
+  defaults:
+    _title: 'HA Pad: Pad'
+    _controller: '\Drupal\ha_pad\Controller\HaPadController::getHaPad'
+    variant: 'pad'
+  requirements:
+    _permission: 'access content'
+
+ha_pad.pad:
+  path: '/hyperaudio/play/{transcriptId}'
+  defaults:
+    _title: 'HA Pad: Player'
+    _controller: '\Drupal\ha_pad\Controller\HaPadController::getHaPad'
+    variant: 'player'
+  requirements:
+    _permission: 'access content'
