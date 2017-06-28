@@ -73,6 +73,8 @@ class HaPadController extends ControllerBase {
       foreach ($section->childNodes as $node) {
         $transcript .= $doc->saveHTML($node);
       }
+
+      $transcript = str_replace(array('<a', '</a>'), array('<span', '</span>'), $transcript);
       //
 
     } else {
