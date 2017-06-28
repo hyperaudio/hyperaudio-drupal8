@@ -1,5 +1,6 @@
-<h1>{{ title }}</h1>
+{% if variant == 'player' %}
 
+<h1>{{ title }}</h1>
 
 <div class="hyperaudio-main">
 <link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
@@ -40,3 +41,128 @@
     </article>
   </section>
 </div>
+
+{% endif %}
+{% if variant == 'pad' %}
+
+<div class="hyperaudio-main">
+<link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
+<style scoped>
+  .hyperaudio-main {
+    margin: 0 auto;
+    width: 1300px;
+    font-family: 'Merriweather', serif;
+    line-height: 1.7em;
+    word-spacing: 0.1em;
+  }
+
+  .hyperaudio-main > section {
+    float: left;
+    width: 50%;
+    width: 640px;
+    text-align: left;
+  }
+
+  .hyperaudio-main > section + section {
+    margin-left: 20px;
+  }
+
+  ::selection {
+    background: #87d8e7;
+    text-shadow: none;
+  }
+</style>
+
+<header>
+  <select></select>
+</header>
+<!-- Player -->
+<section id="player" class="hyperaudio-player hyperaudio-source">
+  <header class="hyperaudio-media">
+    <video src="{{ media }}" type="video/mp4" controls></video>
+  </header>
+
+  <article>
+    <section data-src="{{ media }}" data-type="video/mp4" class="hyperaudio-transcript">
+      {{ transcript | raw }}
+    <section>
+  </article>
+</section>
+
+<!-- Remixer -->
+<section id="remixer" class="hyperaudio-player hyperaudio-sink">
+  <header class="hyperaudio-media">
+  </header>
+
+  <article>
+    <div>
+      <!-- drop area -->
+    </div>
+  </article>
+</section>
+</div>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+  function load(data) {
+    console.log(data);
+
+    document.querySelector('.hyperaudio-player')
+      .querySelector('article').innerHTML = data.content;
+
+    var section = document.querySelector('.hyperaudio-player')
+        .querySelector('article section');
+
+    section.setAttribute('data-src', data.media.source.mp4.url);
+    section.setAttribute('data-type', data.media.source.mp4.type);
+    section.classList.add('hyperaudio-transcript');
+
+    document
+      .querySelectorAll('.hyperaudio-source')
+      .forEach(sourceNode => new window.Source(sourceNode));
+  }
+
+  function loadURL(url, callback) {
+    console.log(url);
+    axios.get(url)
+      .then(function(response) {
+        callback(response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  function loadID(id, callback) {
+    console.log(id);
+    loadURL('http://studsterkel.api.hyperaud.io/v1/transcripts/' + id, callback);
+  }
+
+  function loadMediaID(id, callback) {
+    console.log(id);
+    loadURL('http://studsterkel.api.hyperaud.io/v1/media/' + id + '/transcripts', function(data){
+      // callback(data[0]);
+      loadID(data[0]._id, load);
+    });
+  }
+
+  loadURL('http://studsterkel.api.hyperaud.io/v1/media', function(data) {
+    console.log(data);
+    var select = document.querySelector('select');
+    data.forEach(function(media) {
+      if (media.channel !== 'Interviews') return;
+      var option = document.createElement('option');
+      option.innerText = media.label;
+      option.setAttribute('value', media._id);
+      select.appendChild(option);
+    });
+
+    select.addEventListener('change', function(event) {
+      loadMediaID(this.value, load);
+    });
+  });
+
+</script>
+
+{% endif %}

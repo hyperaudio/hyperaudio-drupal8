@@ -1,9 +1,8 @@
 ha_player.info:
-  path: '/hyperaudio/player/info'
+  path: '/hyperaudio/player-info'
   defaults:
     _title: 'HA Player Information'
     _controller: '\Drupal\ha_player\Controller\HaPlayerController::info'
-    transcriptId: 'eSYPgPdcTfObdONlwLIvOQ'
   requirements:
     _permission: 'access content'
 

@@ -1,9 +1,8 @@
 ha_pad.info:
-  path: '/hyperaudio/pad/info'
+  path: '/hyperaudio/pad-info'
   defaults:
     _title: 'HA Pad Information'
     _controller: '\Drupal\ha_pad\Controller\HaPadController::info'
-    transcriptId: 'eSYPgPdcTfObdONlwLIvOQ'
   requirements:
     _permission: 'access content'
 
