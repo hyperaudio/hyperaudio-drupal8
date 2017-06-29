@@ -111,7 +111,7 @@
     console.log(data);
 
     document.querySelector('.hyperaudio-player')
-      .querySelector('article').innerHTML = data.content.replace('<a', '<span').replace('</a>', '</span>').replace('<article>', '').replace('</article>', '');
+      .querySelector('article').innerHTML = data.content.replace(new RegExp('<a', 'g'), '<span').replace(new RegExp('</a>', 'g'), '</span>').replace('<article>', '').replace('</article>', '');
 
     var section = document.querySelector('.hyperaudio-player')
         .querySelector('article section');
