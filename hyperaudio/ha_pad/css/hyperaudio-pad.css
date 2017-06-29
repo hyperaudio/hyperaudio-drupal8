@@ -51,22 +51,11 @@ background-color: #e9f8fb;
 transition: background-color 0.15s;
 }
 
-.hyperaudio-player header {
-width: 634px;
-height: 360px;
-margin-bottom: 2em;
-background-color: black;
-position: relative;
-}
-
-.hyperaudio-player video {
+.hyperaudio-player header, .hyperaudio-player video {
 max-width: 634px;
 max-height: 360px;
 margin-bottom: 2em;
 background-color: black;
-position: absolute;
-top: 0;
-left: 0;
 }
 
 .hyperaudio-player:not(.hyperaudio-source) *[data-t] {
