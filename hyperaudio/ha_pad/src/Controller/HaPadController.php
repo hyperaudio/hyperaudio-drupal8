@@ -52,6 +52,9 @@ class HaPadController extends ControllerBase {
     }
   }
 
+  public function getHaPlayer(Request $request, $transcriptId, $variant) {
+    return $this->getHaPlayer($request, $transcriptId, $variant);
+  }
 
   public function getHaPad(Request $request, $transcriptId, $variant) {
 

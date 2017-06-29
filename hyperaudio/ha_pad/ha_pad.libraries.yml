@@ -4,3 +4,10 @@ ha_pad.pad:
       css/hyperaudio-pad.css: {}
   js:
     js/bundle.js: {}
+
+ha_pad.player:
+  css:
+    component:
+      css/hyperaudio-pad.css: {}
+  js:
+    js/bundle.js: {}
