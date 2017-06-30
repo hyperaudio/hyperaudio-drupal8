@@ -14,15 +14,14 @@
   {{ transcript | raw }}
 </div>
 
-<script src="https://estevanmaito.github.io/sharect/sharect.min.js"></script>
+<!-- replace these scripts with local versions and run in ha_player.libraries.yml -->
+
+<script src="https://cdn.rawgit.com/MaxArt2501/share-this/master/dist/share-this.js"></script>
+<script src="https://cdn.rawgit.com/MaxArt2501/share-this/master/dist/sharers/twitter.js"></script>
 
 <script>
-var sharect = new Sharect();
-  sharect.config({
-    /*facebook: true,*/
-    twitter: true,
-    twitterUsername: '%23hashtag', /*hashtag example*/
-    /*backgroundColor: '#ff4081',*/
-    iconColor: '#fff'
-  }).init();
+ShareThis({
+    sharers: [ ShareThisViaTwitter ],
+    selector: "article"
+}).init();
 </script>

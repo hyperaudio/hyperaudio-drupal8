@@ -2,6 +2,7 @@ ha_player.player:
   css:
     component:
       css/hyperaudio-lite-player.css: {}
+      css/share-this.css: {}
   js:
     js/twitter.widget.js: {}
     js/hyperaudio-lite.js: {}
