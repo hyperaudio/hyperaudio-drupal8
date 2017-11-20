@@ -33,10 +33,10 @@ class HaPlayerController extends ControllerBase {
   public function getApiData($method, $id)
   {
     // Retrieve data from the external API
-    //$response= drupal_http_request('http://api.hyperaud.io/v1/' . $method . '/' . $id));
+    //$response= drupal_http_request('https://api.hyperaud.io/' . $method . '/' . $id));
 
     try {
-      $response = \Drupal::httpClient()->get('http://api.hyperaud.io/v1/' . $method . '/' . $id, array('headers' => array('Accept' => 'text/plain')));
+      $response = \Drupal::httpClient()->get('https://api.hyperaud.io/' . $method . '/' . $id, array('headers' => array('Accept' => 'text/plain')));
       $data = (string) $response->getBody();
       //$data = '{content:"NO DATA"}';
       if (empty($data)) {
