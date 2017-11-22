@@ -280,7 +280,7 @@
 
   function loadMediaID(id, callback) {
     console.log(id);
-    loadURL('https://studsterkel.api.hyperaud.io/media/' + id + '/transcripts', function(data){
+    loadURL('https://studsterkel.api.hyperaud.io/transcripts?media=' + id, function(data){
       // callback(data[0]);
       loadID(data[0]._id, load);
     });
