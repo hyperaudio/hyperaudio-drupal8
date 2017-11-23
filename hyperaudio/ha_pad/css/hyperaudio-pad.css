@@ -72,6 +72,15 @@ margin: 0;
 padding: .5em 0;
 }
 
+.hyperaudio-player .speaker {
+  font-weight: bold;
+  color: black;
+}
+
+.hyperaudio-player .speaker::after {
+  content: ': ';
+}
+
 .hyperaudio-player .hyperaudio-past {
 color: black;
 }

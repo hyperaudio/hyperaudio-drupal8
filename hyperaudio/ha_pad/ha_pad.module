@@ -32,6 +32,25 @@ function ha_pad_theme() {
   );
 }
 
+function ogProp(array &$page, $name, $value) {
+  $page['#attached']['html_head'][] = [array('#tag' => 'meta', '#attributes' => array(
+    'property' => 'og:' . $name,
+    'content' => $value,
+  )), 'og' . ucfirst($name)];
+}
+
+function ha_pad_page_attachments(array &$page) {
+  ogProp($page, "locale", "en_US");
+  ogProp($page, "title", "Studs Terkel talks with Jane Stedman (1965)");
+  ogProp($page, "type", "video.other");
+  ogProp($page, "description", "Make way for the prize-men, for the Wise Men they are prize-men - double first men of the university! This is the first big entrance in a Gilbert and Sullivan operetta that was never produced in England by D'Oyly Carte, rarely produce.");
+  ogProp($page, "url", "https://b344f1bb.ngrok.io/hyperaudio/pad/rojWGnK_Q0-xd9WRuPP04A");
+  ogProp($page, "image", "http://via.placeholder.com/600x400");
+  ogProp($page, "video", "https://s3.amazonaws.com/wfmt-studs-terkel/published/14103.mp4");
+  ogProp($page, "video:width", "1828");
+  ogProp($page, "video:height", "1038");
+}
+
 /**
  * @} End of "defgroup js_example".
  */

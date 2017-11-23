@@ -5,6 +5,7 @@ namespace Drupal\ha_pad\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Component\Utility\Html;
+use Masterminds\HTML5;
 
 /**
  * Controller for js_example pages.
@@ -31,15 +32,11 @@ class HaPadController extends ControllerBase {
     return $build;
   }
 
-  public function getApiData($method, $id)
-  {
+  public function getApiData($method, $id) {
     // Retrieve data from the external API
-    //$response= drupal_http_request('https://api.hyperaud.io/' . $method . '/' . $id));
-
     try {
-      $response = \Drupal::httpClient()->get('https://api.hyperaud.io/' . $method . '/' . $id, array('headers' => array('Accept' => 'text/plain')));
+      $response = \Drupal::httpClient()->get('https://api.hyperaud.io/' . $method . '/' . $id . '/?format=json', array('headers' => array('Accept' => 'text/plain')));
       $data = (string) $response->getBody();
-      //$data = '{content:"NO DATA"}';
       if (empty($data)) {
         return FALSE;
       } else {
@@ -54,40 +51,57 @@ class HaPadController extends ControllerBase {
 
 
   public function getHaPad(Request $request, $transcriptId, $variant) {
-
     if ($transcriptId !== null) {
+      $transcript = json_decode($this->getApiData('transcripts', $transcriptId), true);
 
-      $json = json_decode($this->getApiData('transcripts',$transcriptId));
+      $media = $transcript['media']['source']['mp4']['url'];
+      $title = $transcript['media']['label'];
 
-      $transcript = $json->{'content'};
-      $media = $json->{'media'}->{'source'}->{'mp4'}->{'url'};
-      $title = $json->{'media'}->{'label'};
+      $html5 = new HTML5();
+      $doc = $html5->loadHTML('<article></article>');
+      $article = $doc->documentElement;
 
-      // clean-up
-      $dom = Html::load($transcript);
-      $section = $dom->getElementsByTagName('section')->item(0);
+      foreach ($transcript['content']['paragraphs'] as $paraData) {
+        $para = $doc->createElement('p');
 
-      $doc = $section->ownerDocument;
-      $transcript = '';
+        // create speaker label
+        if (isset($paraData['speaker'])) {
+          $speaker = $doc->createElement('span');
+          $speaker->setAttribute('class', 'speaker');
+          $speaker->appendChild($doc->createTextNode($paraData['speaker']));
 
-      foreach ($section->childNodes as $node) {
-        $transcript .= $doc->saveHTML($node);
+          $para->appendChild($speaker);
+          $article->appendChild($doc->createTextNode(' ')); // extra space past speaker span
+        }
+
+        foreach ($transcript['content']['words'] as $wordData) {
+          if (! isset($wordData['start'])) continue; // skip non-timed words
+          if (isset($wordData['speaker'])) continue; // skip speaker labels
+
+          if ($wordData['start'] < $paraData['start'] || $wordData['start'] >= $paraData['end']) continue;
+
+          $word = $doc->createElement('span');
+
+          $time = $wordData['start'];
+          if (isset($wordData['end'])) $time .= ',' . ($wordData['end'] - $wordData['start']);
+
+          $word->setAttribute('data-t', $time);
+          $word->appendChild($doc->createTextNode($wordData['text'] . ' '));
+          $para->appendChild($word);
+        }
+        $article->appendChild($para);
       }
 
-      $transcript = str_replace(array('<a', '</a>'), array('<span', '</span>'), $transcript);
-      //
-
+      $html = $html5->saveHTML($doc);
     } else {
-
-      $transcript = $transcript;
+      $html = "";
       $media = "";
       $title = "no transcript found";
-
     }
 
     $build['myelement'] = array(
       '#theme' => 'ha_pad_pad',
-      '#transcript' => $transcript,
+      '#transcript' => $html,
       '#media' => $media,
       '#title' => $title,
       '#variant' => $variant,
@@ -100,4 +114,26 @@ class HaPadController extends ControllerBase {
     // Return the renderable array.
     return $build;
   }
+
+//  function ogProp(array &$page, $name, $value) {
+//    $page['#attached']['html_head'][] = [array('#tag' => 'meta', '#attributes' => array(
+//      'property' => 'og:' . $name,
+//      'content' => $value,
+//    )), 'og' . ucfirst($name)];
+//  }
+//
+//  function your_module_page_attachments(array &$page) {
+//    $this->ogProp($page, "locale", "en_US");
+//    $this->ogProp($page, "title", "Studs Terkel talks with Jane Stedman (1965)");
+//    $this->ogProp($page, "type", "video.other");
+//    $this->ogProp($page, "description", "Make way for the prize-men, for the Wise Men they are prize-men - double first men of the university! This is the first big entrance in a Gilbert and Sullivan operetta that was never produced in England by D'Oyly Carte, rarely produce.");
+//    $this->ogProp($page, "url", "");
+//    $this->ogProp($page, "image", "http://via.placeholder.com/600x400");
+//    $this->ogProp($page, "video", "https://s3.amazonaws.com/wfmt-studs-terkel/published/14103.mp4");
+//    $this->ogProp($page, "video:width", "1828");
+//    $this->ogProp($page, "video:height", "1038");
+////    $this->ogProp($page, "", "");
+//  }
+
+
 }
