@@ -47,7 +47,7 @@ function ha_pad_page_attachments(array &$page) {
   ogProp($page, "url", "https://dev-stra.pantheonsite.io/hyperaudio/pad/rojWGnK_Q0-xd9WRuPP04A");
   ogProp($page, "image", "https://via.placeholder.com/600x400");
   ogProp($page, "video", "https://s3.amazonaws.com/wfmt-studs-terkel/published/14103.mp4");
-  ogProp($page, "og:video:secure_url", "https://s3.amazonaws.com/wfmt-studs-terkel/published/14103.mp4");
+  ogProp($page, "video:secure_url", "https://s3.amazonaws.com/wfmt-studs-terkel/published/14103.mp4");
   ogProp($page, "video:width", "1828");
   ogProp($page, "video:height", "1038");
   ogProp($page, "video:type", "video/mp4");
