@@ -32,6 +32,48 @@ function ha_player_theme() {
   );
 }
 
+function ogProp(array &$page, $name, $value) {
+  $page['#attached']['html_head'][] = [array('#tag' => 'meta', '#attributes' => array(
+    'property' => 'og:' . $name,
+    'content' => $value,
+  )), 'og' . ucfirst($name)];
+}
+
+function ha_player_page_attachments(array &$page) {
+
+  $tempstore = \Drupal::service('user.private_tempstore')->get('ha_player');
+  $media = $tempstore->get('media');
+  $title = $tempstore->get('title');
+  $desc = $tempstore->get('desc');
+  $uri = $tempstore->get('uri');
+
+  ogProp($page, "locale", "en_US");
+  ogProp($page, "title", $title);
+  ogProp($page, "site_name", "Studs Terkel Radio Archive");
+  ogProp($page, "type", "video.other");
+  ogProp($page, "description", $desc);
+  ogProp($page, "url", $uri);
+  ogProp($page, "video:url", $media);
+  ogProp($page, "video:secure_url", $media);
+  ogProp($page, "video:width", "1280");
+  ogProp($page, "video:height", "720");
+  ogProp($page, "video:type", "video/mp4");
+
+  ogProp($page, "image", "https://lab.hyperaud.io/temp/studsposter.png");
+  ogProp($page, "image:width", "640");
+  ogProp($page, "image:height", "361");
+
+  $page['#attached']['html_head'][] = [array('#tag' => 'meta', '#attributes' => array(
+    'property' => 'fb:app_id',
+    'content' => "177867219463585",
+  )), 'fbApp_id'];
+  $page['#attached']['html_head'][] = [array('#tag' => 'meta', '#attributes' => array(
+    'property' => 'fb:admins',
+    'content' => "754413412",
+  )), 'fbAdmins'];
+
+}
+
 /**
  * @} End of "defgroup js_example".
  */

@@ -7,10 +7,11 @@ ha_player.info:
     _permission: 'access content'
 
 ha_player.player:
-  path: '/hyperaudio/player/{transcriptId}'
+  path: '/hyperaudio/player/{transcriptId}/{t}'
   defaults:
     _title: 'HA Player: Player'
     _controller: '\Drupal\ha_player\Controller\HaPlayerController::getHaPlayer'
     variant: 'player'
+    t: '0,20'
   requirements:
     _permission: 'access content'
