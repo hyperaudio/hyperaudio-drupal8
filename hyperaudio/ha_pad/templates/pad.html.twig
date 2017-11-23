@@ -1,4 +1,8 @@
+
+
 {% if variant == 'player' %}
+
+
 
 <h1>{{ title }}</h1>
 
@@ -207,7 +211,7 @@
 
     <article>
       <section data-src="{{ media }}" data-type="video/mp4" class="hyperaudio-transcript">
-        {{ transcript | raw }}
+          {{ transcript | raw }}
       <section>
     </article>
   </section>
@@ -275,23 +279,23 @@
 
   function loadID(id, callback) {
     // console.log(id);
-    loadURL('http://studsterkel.api.hyperaud.io/v1/transcripts/' + id, callback);
+    loadURL('https://studsterkel.api.hyperaud.io/transcripts/' + id, callback);
   }
 
   function loadMediaID(id, callback) {
     console.log(id);
-    loadURL('http://studsterkel.api.hyperaud.io/v1/media/' + id + '/transcripts', function(data){
+    loadURL('https://studsterkel.api.hyperaud.io/transcripts?media=' + id, function(data){
       // callback(data[0]);
       loadID(data[0]._id, load);
     });
   }
 
   // default
-  // loadURL('http://studsterkel.api.hyperaud.io/v1/transcripts/UO5wDCaqSRawl22uTb6ciw', load);
+  // loadURL('https://studsterkel.api.hyperaud.io/transcripts/UO5wDCaqSRawl22uTb6ciw', load);
   // loadID('UO5wDCaqSRawl22uTb6ciw', load);
   // loadID("ORdQOjpETuKGv9OwiWnEMQ", load);
 
-  loadURL('http://studsterkel.api.hyperaud.io/v1/media', function(data) {
+  loadURL('https://studsterkel.api.hyperaud.io/media', function(data) {
     // console.log(data);
     var select = document.querySelector('select#media');
     data.forEach(function(media) {
@@ -307,7 +311,7 @@
     });
   });
 
-  loadURL('http://studsterkel.api.hyperaud.io/v1/mixes', function(data) {
+  loadURL('https://studsterkel.api.hyperaud.io/mixes', function(data) {
     console.log(data);
     // var select = document.querySelector('select#media');
     // data.forEach(function(media) {
