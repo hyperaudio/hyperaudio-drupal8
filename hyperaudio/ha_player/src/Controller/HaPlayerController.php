@@ -56,7 +56,7 @@ class HaPlayerController extends ControllerBase {
     $media = $transcript['media']['source']['mp4']['url'];
     $title = $transcript['media']['label'];
     $desc = "";
-    $current_uri = $request->getRequestUri();
+    $current_uri = $request->getUri();
 
     if ($t !== '') {
       $tt = explode(',', $t);
