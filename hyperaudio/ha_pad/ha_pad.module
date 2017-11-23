@@ -46,15 +46,17 @@ function ha_pad_page_attachments(array &$page) {
   ogProp($page, "type", "video.other"); 
   ogProp($page, "description", "Make way for the prize-men, for the Wise Men they are prize-men - double first men of the university! This is the first big entrance in a Gilbert and Sullivan operetta that was never produced in England by D'Oyly Carte, rarely produce.");
   ogProp($page, "url", "https://dev-stra.pantheonsite.io/hyperaudio/pad/rojWGnK_Q0-xd9WRuPP04A");
-  ogProp($page, "image", "https://via.placeholder.com/1280x720");
-  ogProp($page, "image:width", "1280");
-  ogProp($page, "image:height", "720");
-  ogProp($page, "video", "https://s3.amazonaws.com/wfmt-studs-terkel/published/14103.mp4");
+//  ogProp($page, "video", "https://s3.amazonaws.com/wfmt-studs-terkel/published/14103.mp4");
   ogProp($page, "video:url", "https://s3.amazonaws.com/wfmt-studs-terkel/published/14103.mp4");
   ogProp($page, "video:secure_url", "https://s3.amazonaws.com/wfmt-studs-terkel/published/14103.mp4");
   ogProp($page, "video:width", "1280");
   ogProp($page, "video:height", "720");
   ogProp($page, "video:type", "video/mp4");
+
+  ogProp($page, "image", "https://via.placeholder.com/1280x720");
+  ogProp($page, "image:width", "1280");
+  ogProp($page, "image:height", "720");
+
   $page['#attached']['html_head'][] = [array('#tag' => 'meta', '#attributes' => array(
     'property' => 'fb:app_id',
     'content' => "177867219463585",
