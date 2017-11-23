@@ -49,6 +49,7 @@ function ha_pad_page_attachments(array &$page) {
   ogProp($page, "video", "https://s3.amazonaws.com/wfmt-studs-terkel/published/14103.mp4");
   ogProp($page, "video:width", "1828");
   ogProp($page, "video:height", "1038");
+  ogProp($page, "app_id", "177867219463585");
 }
 
 /**
