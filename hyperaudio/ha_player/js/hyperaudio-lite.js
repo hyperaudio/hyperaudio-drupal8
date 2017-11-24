@@ -1,6 +1,6 @@
 var hyperaudiolite = (function () {
 
-  var hashArray = window.location.hash.substr(3).split(',');
+  // var hashArray = window.location.hash.substr(3).split(',');
 
   var hal = {},
     transcript,
@@ -13,6 +13,13 @@ var hyperaudiolite = (function () {
     timer,
     minimizedMode,
     wordArr = [];
+
+  // specific to STRA to split by slashes
+
+  if (document.location.pathname.split('/').pop().split(',').length === 2) {
+    start = document.location.pathname.split('/').pop().split(',')[0];
+    end = document.location.pathname.split('/').pop().split(',')[1];
+  }
 
   function init(mediaElementId, m) {
 
@@ -61,14 +68,14 @@ var hyperaudiolite = (function () {
     player.addEventListener("pause", clearTimer, false);
     player.addEventListener("play", checkPlayHead, false);
 
-    start = hashArray[0];
+    // start = hashArray[0];
 
     if (!isNaN(parseFloat(start))) {
       player.currentTime = start;
       player.play();
     }
 
-    end = hashArray[1];
+    // end = hashArray[1];
 
     //TODO convert to binary search for below for quicker startup
 
@@ -134,7 +141,17 @@ var hyperaudiolite = (function () {
         nodeDuration = 10; // arbitary for now
       }
 
-      fragment = "#t=" + nodeStart + "," + (Math.round((nodeStart + nodeDuration) * 10) / 10);
+
+
+      // fragment = "#t=" + nodeStart + "," + (Math.round((nodeStart + nodeDuration) * 10) / 10);
+
+      var nodeEnd = (Math.round((nodeStart + nodeDuration) * 10) / 10);
+
+      if (document.location.pathname.split('/').pop().split(',').length === 2) {
+        history.replaceState({}, "", nodeStart + "," + nodeEnd);
+      } else {
+        history.replaceState({}, "", document.location.pathname.split('/').pop() + "/" + nodeStart + "," + nodeEnd);
+      }
     }
 
     return (fragment);
