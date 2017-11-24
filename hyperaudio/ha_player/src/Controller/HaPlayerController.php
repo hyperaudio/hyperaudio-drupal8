@@ -61,6 +61,7 @@ class HaPlayerController extends ControllerBase {
     if ($t !== '') {
       $tt = explode(',', $t);
       foreach ($transcript['content']['words'] as $wordData) {
+        if (! isset($wordData['start'])) continue;
         if ($wordData['start'] < $tt[0] || $wordData['start'] >= $tt[1]) {
           continue;
         }

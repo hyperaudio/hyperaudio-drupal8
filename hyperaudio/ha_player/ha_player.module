@@ -80,7 +80,7 @@ function ha_player_page_attachments(array &$page) {
   metaTag($page, "twitter:title", $title);
   metaTag($page, "twitter:description", $desc);
   metaTag($page, "twitter:image", "https://lab.hyperaud.io/temp/studsposter.png");
-  
+
 }
 
 /**
