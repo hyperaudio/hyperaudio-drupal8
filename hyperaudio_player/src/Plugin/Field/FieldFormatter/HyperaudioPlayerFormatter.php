@@ -128,7 +128,8 @@ class HyperaudioPlayerFormatter extends FormatterBase {
         '#height' => ['#plain_text' => $settings['height']],
         '#transcript_width' => ['#plain_text' => $settings['transcript_width']],
         '#transcript_height' => ['#plain_text' => $settings['transcript_height']],
-        '#media' => $data['media']['source']['mp4']['url'],
+        '#media' => $data['media']['url'],
+        '#poster' => $data['poster']['url'],
         '#transcript' => $this->renderTranscript($data)
       ];
     }
@@ -136,8 +137,13 @@ class HyperaudioPlayerFormatter extends FormatterBase {
   }
 
   public function renderTranscript($transcript) {
-    $media = $transcript['media']['source']['mp4']['url'];
-    $title = $transcript['media']['label'];
+    $media = $transcript['media']['url'];
+    $media_width = $transcript['media']['width'];
+    $media_height = $transcript['media']['height'];
+    $title = $transcript['title'];
+    $poster = $transcript['poster']['url'];
+    $poster_width = $transcript['poster']['width'];
+    $poster_height = $transcript['poster']['height'];
     $desc = "";
     $current_uri = \Drupal::request()->getUri();
     $t = \Drupal::request()->query->get('t');
@@ -159,6 +165,11 @@ class HyperaudioPlayerFormatter extends FormatterBase {
 
     $tempstore = \Drupal::service('user.private_tempstore')->get('hyperaudio_player');
     $tempstore->set('media', $media);
+    $tempstore->set('media_width', $media_width);
+    $tempstore->set('media_height', $media_height);
+    $tempstore->set('poster', $poster);
+    $tempstore->set('poster_width', $poster_width);
+    $tempstore->set('poster_height', $poster_height);
     $tempstore->set('title', $title);
     $tempstore->set('desc', $desc);
     $tempstore->set('uri', $current_uri);

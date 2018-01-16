@@ -152,13 +152,8 @@ var hyperaudiolite = (function () {
 
       // fragment = "#t=" + nodeStart + "," + (Math.round((nodeStart + nodeDuration) * 10) / 10);
 
-      var nodeEnd = (Math.round((nodeStart + nodeDuration) * 10) / 10);
-
-      if (document.location.pathname.split('/').pop().split(',').length === 2) {
-        history.replaceState({}, "", nodeStart + "," + nodeEnd);
-      } else {
-        history.replaceState({}, "", document.location.pathname.split('/').pop() + "/" + nodeStart + "," + nodeEnd);
-      }
+      var nodeEnd = (Math.round((nodeStart + nodeDuration) * 10) / 10);      
+      history.replaceState({}, "", URI(document.location.href).setSearch({t: nodeStart + "," + nodeEnd}).toString());
     }
 
     return (fragment);

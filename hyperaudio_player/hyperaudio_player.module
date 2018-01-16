@@ -17,6 +17,7 @@ function hyperaudio_player_theme() {
         'width' => NULL,
         'height' => NULL,
         'media' => NULL,
+        'poster' => NULL,
         'transcript' => NULL,
         'transcript_width' => NULL,
         'transcript_height' => NULL,
@@ -43,7 +44,15 @@ function metaTag(array &$page, $name, $value) {
 
 function hyperaudio_player_page_attachments(array &$page) {
   $tempstore = \Drupal::service('user.private_tempstore')->get('hyperaudio_player');
+
   $media = $tempstore->get('media');
+  $media_width = $tempstore->get('media_width');
+  $media_height = $tempstore->get('media_height');
+
+  $poster = $tempstore->get('poster');
+  $poster_width = $tempstore->get('poster_width');
+  $poster_height = $tempstore->get('poster_height');
+
   $title = $tempstore->get('title');
   $desc = $tempstore->get('desc');
   $uri = $tempstore->get('uri');
@@ -56,16 +65,16 @@ function hyperaudio_player_page_attachments(array &$page) {
   metaTag($page, "og:url", $uri);
   metaTag($page, "og:video:url", $media);
   metaTag($page, "og:video:secure_url", $media);
-  metaTag($page, "og:video:width", "1280");
-  metaTag($page, "og:video:height", "720");
-  metaTag($page, "og:video:type", "video/mp4");
+  metaTag($page, "og:video:width", $media_width);
+  metaTag($page, "og:video:height", $media_height);
+  metaTag($page, "og:video:type", "video/mp4"); // TBD: what do to with audio?
 
-  metaTag($page, "og:image", "https://lab.hyperaud.io/temp/studsposter.png");
-  metaTag($page, "og:image:width", "640");
-  metaTag($page, "og:image:height", "361");
+  metaTag($page, "og:image", $poster);
+  metaTag($page, "og:image:width", $poster_width);
+  metaTag($page, "og:image:height", $poster_height);
 
-  metaTag($page, "fb:app_id", "177867219463585");
-  metaTag($page, "fb:admins", "754413412");
+  metaTag($page, "fb:app_id", "177867219463585"); // TODO: move to settings
+  metaTag($page, "fb:admins", "754413412"); // TODO: move to settings
 
 //  $page['#attached']['html_head'][] = [array('#tag' => 'meta', '#attributes' => array(
 //    'property' => 'fb:app_id',
@@ -80,6 +89,6 @@ function hyperaudio_player_page_attachments(array &$page) {
   metaTag($page, "twitter:site", "@studsarchive");
   metaTag($page, "twitter:title", $title);
   metaTag($page, "twitter:description", $desc);
-  metaTag($page, "twitter:image", "https://lab.hyperaud.io/temp/studsposter.png");
+  metaTag($page, "twitter:image", $poster);
 
 }
