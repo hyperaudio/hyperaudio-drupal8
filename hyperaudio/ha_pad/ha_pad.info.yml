@@ -1,8 +1,0 @@
-name: Hyperaudio Pad
-description: Drupal 8 Hyperaudio Pad
-type: module
-package: 'Hyperaudio modules'
-core: 8.x
-dependencies:
-  - drupal:node
-  - hyperaudio:hyperaudio

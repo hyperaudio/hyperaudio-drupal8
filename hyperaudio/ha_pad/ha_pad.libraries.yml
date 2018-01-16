@@ -1,6 +1,0 @@
-ha_pad.pad:
-  css:
-    component:
-      css/hyperaudio-pad.css: {}
-  js:
-    js/bundle.js: {}

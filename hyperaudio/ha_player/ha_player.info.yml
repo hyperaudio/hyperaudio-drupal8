@@ -1,8 +1,0 @@
-name: Hyperaudio Player
-description: Drupal 8 Hyperaudio Player
-type: module
-package: 'Hyperaudio modules'
-core: 8.x
-dependencies:
-  - drupal:node
-  - hyperaudio:hyperaudio

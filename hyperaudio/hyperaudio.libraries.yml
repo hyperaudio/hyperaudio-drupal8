@@ -1,5 +1,0 @@
-hyperaudio.icons:
-  version: VERSION
-  css:
-    theme:
-      css/hyperaudio.icons.css: {}
