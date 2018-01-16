@@ -1,0 +1,14 @@
+hyperaudio_player:
+  css:
+    component:
+      css/hyperaudio-lite-player.css: {}
+      css/share-this.css: { minified: true }
+  js:
+    js/velocity.js: {}
+    js/share-this.js: { minified: true }
+    js/twitter.js: { minified: true }
+    js/facebook.js: { minified: true }
+    js/URI.js: { minified: true }
+    js/hyperaudio-lite-wrapper.js: {}
+    js/hyperaudio-lite.js: {}
+    js/hyperaudio.sharect.min.js: { minified: true }

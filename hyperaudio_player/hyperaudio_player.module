@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * @file
+ * Hyperaudio Player module.
+ *
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function hyperaudio_player_theme() {
+  return [
+    'hyperaudio_player_output' => [
+      'variables' => [
+        'video' => NULL,
+        'width' => NULL,
+        'height' => NULL,
+        'media' => NULL,
+        'transcript' => NULL,
+        'transcript_width' => NULL,
+        'transcript_height' => NULL,
+      ],
+      'template' => 'hyperaudio-player-output',
+    ],
+  ];
+}
+
+
+function metaTag(array &$page, $name, $value) {
+  $page['#attached']['html_head'][] = [
+    array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'property' => $name,
+        'content' => $value,
+      )
+    ),
+    // '#cache' => ['contexts' => ['url.query_args:t']],
+    'og' . ucfirst($name)
+  ];
+}
+
+function hyperaudio_player_page_attachments(array &$page) {
+  $tempstore = \Drupal::service('user.private_tempstore')->get('hyperaudio_player');
+  $media = $tempstore->get('media');
+  $title = $tempstore->get('title');
+  $desc = $tempstore->get('desc');
+  $uri = $tempstore->get('uri');
+
+  metaTag($page, "og:locale", "en_US");
+  metaTag($page, "og:title", $title);
+  metaTag($page, "og:site_name", "Studs Terkel Radio Archive");
+  metaTag($page, "og:type", "video.other");
+  metaTag($page, "og:description", $desc);
+  metaTag($page, "og:url", $uri);
+  metaTag($page, "og:video:url", $media);
+  metaTag($page, "og:video:secure_url", $media);
+  metaTag($page, "og:video:width", "1280");
+  metaTag($page, "og:video:height", "720");
+  metaTag($page, "og:video:type", "video/mp4");
+
+  metaTag($page, "og:image", "https://lab.hyperaud.io/temp/studsposter.png");
+  metaTag($page, "og:image:width", "640");
+  metaTag($page, "og:image:height", "361");
+
+  metaTag($page, "fb:app_id", "177867219463585");
+  metaTag($page, "fb:admins", "754413412");
+
+//  $page['#attached']['html_head'][] = [array('#tag' => 'meta', '#attributes' => array(
+//    'property' => 'fb:app_id',
+//    'content' => "177867219463585",
+//  )), 'fbApp_id'];
+//  $page['#attached']['html_head'][] = [array('#tag' => 'meta', '#attributes' => array(
+//    'property' => 'fb:admins',
+//    'content' => "754413412",
+//  )), 'fbAdmins'];
+
+  metaTag($page, "twitter:card", "summary");
+  metaTag($page, "twitter:site", "@studsarchive");
+  metaTag($page, "twitter:title", $title);
+  metaTag($page, "twitter:description", $desc);
+  metaTag($page, "twitter:image", "https://lab.hyperaud.io/temp/studsposter.png");
+
+}

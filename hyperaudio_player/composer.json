@@ -1,0 +1,15 @@
+{
+  "name": "drupal/hyperaudio_player",
+  "description": "Hyperaudio Player",
+  "type": "drupal-module",
+  "homepage": "https://github.com/hyperaudio/hyperaudio-drupal8",
+  "support": {
+    "issues": "https://github.com/hyperaudio/hyperaudio-drupal8",
+    "documentation": "https://github.com/hyperaudio/hyperaudio-drupal8",
+    "source": "https://github.com/hyperaudio/hyperaudio-drupal8"
+  },
+  "license": "MIT",
+  "require": {
+    "masterminds/html5": "2.*"
+  }
+}
