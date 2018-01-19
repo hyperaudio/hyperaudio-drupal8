@@ -13,14 +13,17 @@ function hyperaudio_player_theme() {
   return [
     'hyperaudio_player_output' => [
       'variables' => [
+        'player' => NULL,
         'video' => NULL,
-        'width' => NULL,
-        'height' => NULL,
+        'player_class' => NULL,
+        'player_style' => NULL,
+        'player_selector' => NULL,
         'media' => NULL,
         'poster' => NULL,
         'transcript' => NULL,
-        'transcript_width' => NULL,
-        'transcript_height' => NULL,
+        'transcript_class' => NULL,
+        'transcript_style' => NULL,
+        'transcript_selector' => NULL,
       ],
       'template' => 'hyperaudio-player-output',
     ],

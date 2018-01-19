@@ -31,13 +31,16 @@ class HyperaudioPlayerFormatter extends FormatterBase {
    */
   public static function defaultSettings() {
     return [
+      "player" => "1",
       "video" => "0",
-      "width" => "400px",
-      "height" => "auto",
+      "player_class" => "hyperplayer",
+      "player_style" => "",
+      "player_selector" => ".hyperplayer",
       "media" => "",
       "transcript" => "",
-      "transcript_width" => "100%",
-      "transcript_height" => "600px",
+      "transcript_class" => "hypertranscript",
+      "transcript_style" => "",
+      "transcript_selector" => ".hypertranscript",
     ] + parent::defaultSettings();
   }
   
@@ -52,40 +55,62 @@ class HyperaudioPlayerFormatter extends FormatterBase {
       '#markup' => '<h3>' . $this->t('Hyperaudio Player') . '</h3>',
     ];
     
+    $elements['player'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Media player'),
+      '#default_value' => $this->getSetting('player'),
+      '#description' => $this->t('Show media player?'),
+    ];
+    
     $elements['video'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Video player'),
       '#default_value' => $this->getSetting('video'),
+      '#description' => $this->t('Use video player instead of audio.'),
     ];
     
-    $elements['width'] = [
+    $elements['player_class'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Width of media player'),
-      '#default_value' => $this->getSetting('width'),
-      '#description' => $this->t('You can set sizes in px or percent (ex: 600px or 100%).'),
+      '#title' => $this->t('Class attribute of the media player'),
+      '#default_value' => $this->getSetting('player_class'),
       '#size' => 10,
     ];
     
-    $elements['height'] = [
+    $elements['player_selector'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Height of media player (used only for video)'),
-      '#default_value' => $this->getSetting('height'),
-      '#description' => $this->t('You can set sizes in px or percent (ex: 600px or 100%).'),
+      '#title' => $this->t('CSS selector to identify the media player'),
+      '#default_value' => $this->getSetting('player_selector'),
       '#size' => 10,
     ];
     
-    $elements['transcript_width'] = [
+    $elements['player_style'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Width of transcript container'),
-      '#default_value' => $this->getSetting('transcript_width'),
-      '#description' => $this->t('You can set sizes in px or percent (ex: 600px or 100%).'),
+      '#title' => $this->t('Style attribute of the media player'),
+      '#default_value' => $this->getSetting('player_style'),
+      '#description' => $this->t('Use this for inline styles.'),
       '#size' => 10,
     ];
-    $elements['transcript_height'] = [
+    
+    $elements['transcript_class'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Height of transcript container'),
-      '#default_value' => $this->getSetting('transcript_height'),
-      '#description' => $this->t('You can set sizes in px or percent (ex: 600px or 100%).'),
+      '#title' => $this->t('Class attribute transcript container'),
+      '#default_value' => $this->getSetting('transcript_class'),
+      '#description' => $this->t('Alter this to accomodate multiple transcripts in the page.'),
+      '#size' => 10,
+    ];
+    
+    $elements['transcript_selector'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('CSS selector to identify the transcript container'),
+      '#default_value' => $this->getSetting('transcript_selector'),
+      '#size' => 10,
+    ];
+    
+    $elements['transcript_style'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Style attribute of the transcript container'),
+      '#default_value' => $this->getSetting('transcript_style'),
+      '#description' => $this->t('Use this for inline styles.'),
       '#size' => 10,
     ];
     
@@ -97,15 +122,21 @@ class HyperaudioPlayerFormatter extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = [];
-
+    
+    $player = $this->getSetting('player');
     $video = $this->getSetting('video');
-    if ($video) {
-      $summary[] = $this->t('Video: @width x @height', ['@width' => $this->getSetting('width'), '@height' => $this->getSetting('height')]);
+    
+    if ($player) {
+      if ($video) {
+        $summary[] = $this->t('Video class(@player_class) style(@player_style) selector(@player_selector)', ['@player_class' => $this->getSetting('player_class'), '@player_style' => $this->getSetting('player_style'), '@player_selector' => $this->getSetting('player_selector')]);
+      } else {
+        $summary[] = $this->t('Audio class(@player_class) style(@player_style) selector(@player_selector)', ['@player_class' => $this->getSetting('player_class'), '@player_style' => $this->getSetting('player_style'), '@player_selector' => $this->getSetting('player_selector')]); 
+      }
     } else {
-      $summary[] = $this->t('Audio: @width', ['@width' => $this->getSetting('width')]);  
+      $summary[] = $this->t('External player selector(@player_selector)', ['@player_selector' => $this->getSetting('player_selector')]); 
     }
     
-    $summary[] = $this->t('Transcript: @width x @height', ['@width' => $this->getSetting('transcript_width'), '@height' => $this->getSetting('transcript_height')]);
+    $summary[] = $this->t('Transcript class(@transcript_class) style(@transcript_style) selector(@transcript_selector)', ['@transcript_class' => $this->getSetting('transcript_class'), '@transcript_style' => $this->getSetting('transcript_style'), '@transcript_selector' => $this->getSetting('transcript_selector')]);
 
     return $summary;
   }
@@ -116,6 +147,7 @@ class HyperaudioPlayerFormatter extends FormatterBase {
     $element = [];
     $settings = $this->getSettings();
 
+    $player = (int) $settings['player'] ? TRUE : FALSE;
     $video = (int) $settings['video'] ? TRUE : FALSE;
     
     foreach ($items as $delta => $item) {
@@ -123,11 +155,14 @@ class HyperaudioPlayerFormatter extends FormatterBase {
       
       $element[$delta] = [
         '#theme' => 'hyperaudio_player_output',
+        '#player' => $player,
         '#video' => $video,
-        '#width' => ['#plain_text' => $settings['width']],
-        '#height' => ['#plain_text' => $settings['height']],
-        '#transcript_width' => ['#plain_text' => $settings['transcript_width']],
-        '#transcript_height' => ['#plain_text' => $settings['transcript_height']],
+        '#player_class' => ['#plain_text' => $settings['player_class']],
+        '#player_style' => ['#plain_text' => $settings['player_style']],
+        '#player_selector' => ['#plain_text' => $settings['player_selector']],
+        '#transcript_class' => ['#plain_text' => $settings['transcript_class']],
+        '#transcript_style' => ['#plain_text' => $settings['transcript_style']],
+        '#transcript_selector' => ['#plain_text' => $settings['transcript_selector']],
         '#media' => $data['media']['url'],
         '#poster' => $data['poster']['url'],
         '#transcript' => $this->renderTranscript($data)

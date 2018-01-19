@@ -237,7 +237,7 @@ var hyperaudiolite = (function () {
 
           if (Vlc) {
             Vlc(scrollNode, "scroll", {
-              container: hypertranscript,
+              container: transcript,
               duration: 800,
               delay: 0
             });

@@ -1,9 +1,25 @@
-{% if video %}
-  <video id="hyperplayer" style="z-index: 5000000; position:relative; width:{{ width }}; height: {{ height }}" src="{{ media }}" type="video/mp4" poster="{{ poster }}" controls preload></video>
-{% else %}
-  <audio id="hyperplayer" style="z-index: 5000000; position:relative; width:{{ width }}" src="{{ media }}" type="audio/mp4" controls preload></audio>
+{% if player %}
+  {% if video %}
+    <video class="{{ player_class }}"  style="{{ player_style }}" src="{{ media }}" poster="{{ poster }}" type="video/mp4" controls preload></video>
+  {% else %}
+    <audio class="{{ player_class }}" style="{{ player_style }}" src="{{ media }}" type="audio/mp4" controls preload></audio>
+  {% endif %}
 {% endif %}
 
-<div id="hypertranscript" class="hypertranscript" style="overflow-y:scroll; height: {{ transcript_height }}; width: {{ transcript_width }};position:relative; border-style:dashed; border-width: 1px; border-color:#999; padding: 8px">{{ transcript | raw }}</div>
+<div class="{{ transcript_class }}" style="{{ transcript_style }}" data-player={{ player_selector }}>{{ transcript | raw }}</div>
 
 {{ attach_library('hyperaudio_player/hyperaudio_player') }}
+<script>
+window.onload = function() {
+  // minimizedMode is still experimental
+  var minimizedMode = true;
+  hyperaudiolite.init("{{ transcript_selector }}", "{{ player_selector }}", minimizedMode);
+  
+  if (ShareThis) {
+     ShareThis({
+       sharers: [ ShareThisViaTwitter, ShareThisViaFacebook ],
+       selector: "{{ transcript_selector }}"
+     }).init();
+  }
+}
+</script>

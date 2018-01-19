@@ -1,3 +1,25 @@
+.hypertranscript {
+  background-color: #f6f6f8;
+  padding: 1em;
+  position: relative;
+  width: 80%;
+  height: 400px;
+  overflow-y: scroll;
+}
+
+video.hyperplayer {
+  z-index: 5000000;
+  position:relative; 
+  width: 80%;
+/*  height: ;*/
+}
+  
+audio.hyperplayer {
+  z-index: 5000000;
+  position:relative;
+  width: 80%;
+}
+
 .hypertranscript .strikethrough {
   text-decoration: line-through;
 }
@@ -23,15 +45,11 @@
 }
 
 .hypertranscript .read {
-  color: #000 !important;
+  color: #424242 !important;
 }
 
 .hypertranscript .unread {
-  color: #999 !important;
-}
-
-.hypertranscript .search-match {
-  background-color: pink !important;
+  color: #b4b4b4 !important;
 }
 
 .hypertranscript .share-match {
@@ -46,19 +64,37 @@
   content: '\231D';
 }
 
-.hypertranscript h5 {
-  font-size: 130%;
-}
-
 .hypertranscript [data-m] {
   cursor: pointer;
 }
 
 .hypertranscript .speaker {
-  font-weight: bold;
+/*  font-weight: bold;*/
+}
+
+.hypertranscript .speaker:after {
+  content: ':';
 }
 
 .hypertranscript p[data-tc]:before {
   content: attr(data-tc);
   display: block;
+  color: #d7d8da;
+}
+
+.hypertranscript::-webkit-scrollbar-track
+{
+	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+.hypertranscript::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #aeafb1;
+}
+
+.hypertranscript::-webkit-scrollbar-thumb
+{
+	background-color: #e20400;
 }
