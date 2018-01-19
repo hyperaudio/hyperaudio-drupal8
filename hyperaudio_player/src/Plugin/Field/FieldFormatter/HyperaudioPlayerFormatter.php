@@ -183,6 +183,22 @@ class HyperaudioPlayerFormatter extends FormatterBase {
 
     foreach ($transcript['content']['paragraphs'] as $paraData) {
       $para = $doc->createElement('p');
+      
+      // create speaker label
+      if (isset($paraData['speaker'])) {
+        $speaker = $doc->createElement('span');
+        $speaker->setAttribute('class', 'speaker');
+        $speaker->appendChild($doc->createTextNode($paraData['speaker']));
+
+        $para->appendChild($speaker);
+        $para->appendChild($doc->createTextNode(' ')); // FIXME extra space past speaker element
+       }
+       
+       if (isset($paraData['start'])) {
+         $para->setAttribute('data-m', 1000 * $paraData['start']);
+         $para->setAttribute('data-tc', gmdate("H:i:s", $paraData['start']));
+         if (isset($paraData['end'])) $para->setAttribute('data-d', 1000 * ($paraData['end'] - $paraData['start']));
+       }
 
       foreach ($transcript['content']['words'] as $wordData) {
         if (! isset($wordData['start'])) continue; // skip non-timed words

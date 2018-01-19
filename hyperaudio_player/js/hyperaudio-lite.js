@@ -1,7 +1,4 @@
 var hyperaudiolite = (function () {
-
-  // var hashArray = window.location.hash.substr(3).split(',');
-
   var hal = {},
     transcript,
     words,
@@ -13,13 +10,6 @@ var hyperaudiolite = (function () {
     timer,
     minimizedMode,
     wordArr = [];
-
-  // specific to STRA to split by slashes
-    
-  // if (document.location.pathname.split('/').pop().split(',').length === 2) {
-  //   start = document.location.pathname.split('/').pop().split(',')[0];
-  //   end = document.location.pathname.split('/').pop().split(',')[1];
-  // }
   
   var query = URI.parseQuery(document.location.search);
   if (typeof query.t === 'string') {
@@ -28,10 +18,8 @@ var hyperaudiolite = (function () {
     if (t.length > 1) end = t[1];
   }
 
-  function init(mediaElementId, m) {
-
+  function init(mediaElementSelector, m) {
     window.addEventListener('mouseup', function() {
-
       var mediaFragment = getSelectionMediaFragment();
 
       if ( mediaFragment !== "") {
@@ -44,7 +32,6 @@ var hyperaudiolite = (function () {
     wordIndex = 0;
 
     //Create the array of timed elements (wordArr)
-
     var words = document.querySelectorAll('[data-m]');
     for (var i = 0; i < words.length; ++i) {
       var m = parseInt(words[i].getAttribute('data-m'));
@@ -65,7 +52,7 @@ var hyperaudiolite = (function () {
     //words = transcript.getElementsByTagName('span');
 
     paras = transcript.getElementsByTagName('p');
-    player = document.getElementById(mediaElementId);
+    player = document.querySelector(mediaElementSelector);
     paraIndex = 0;
     words[0].classList.add("active");
     paras[0].classList.add("active");
@@ -76,16 +63,13 @@ var hyperaudiolite = (function () {
     player.addEventListener("play", checkPlayHead, false);
 
     // start = hashArray[0];
-
     if (!isNaN(parseFloat(start))) {
       player.currentTime = start;
       player.play();
     }
 
     // end = hashArray[1];
-
     //TODO convert to binary search for below for quicker startup
-
     if (start && end) {
       for (var i = 1; i < words.length; i++) {
         var wordStart = parseInt(words[i].getAttribute("data-m"))/1000;
@@ -97,7 +81,6 @@ var hyperaudiolite = (function () {
   }
 
   function getSelectionMediaFragment() {
-
     var fragment = "";
 
     if (window.getSelection) {
@@ -107,7 +90,6 @@ var hyperaudiolite = (function () {
     }
 
     if (selection.toString() !== '') {
-
       fNode = selection.focusNode.parentNode;
       aNode = selection.anchorNode.parentNode;
 
@@ -130,7 +112,6 @@ var hyperaudiolite = (function () {
       }
 
       // 1 decimal place will do
-
       aNodeTime = Math.round(aNodeTime / 100) / 10;
       aNodeDuration = Math.round(aNodeDuration / 100) / 10;
       fNodeTime = Math.round(fNodeTime / 100) / 10;
@@ -148,10 +129,7 @@ var hyperaudiolite = (function () {
         nodeDuration = 10; // arbitary for now
       }
 
-
-
       // fragment = "#t=" + nodeStart + "," + (Math.round((nodeStart + nodeDuration) * 10) / 10);
-
       var nodeEnd = (Math.round((nodeStart + nodeDuration) * 10) / 10);      
       history.replaceState({}, "", URI(document.location.href).setSearch({t: nodeStart + "," + nodeEnd}).toString());
     }
@@ -160,7 +138,6 @@ var hyperaudiolite = (function () {
   }
 
   function setPlayHead(e) {
-
     var target = (e.target) ? e.target : e.srcElement;
     target.setAttribute("class", "active");
     var timeSecs = parseInt(target.getAttribute("data-m"))/1000;
@@ -177,18 +154,15 @@ var hyperaudiolite = (function () {
   }
 
   function checkPlayHead(e) {
-
     clearTimer();
 
     //check for end time of shared piece
-
     if (end && (end < player.currentTime)) {
       player.pause();
       end = null;
       paused = true;
     } else {
       var newPara = false;
-
       var interval; // used to establish next checkPlayHead
 
       var l = 0, r = wordArr.length - 1;
@@ -224,7 +198,6 @@ var hyperaudiolite = (function () {
       paras = transcript.getElementsByTagName('p');
 
       //remove active class from all paras
-
       for (var a = 0; a < paras.length; a++) {
         if (paras[a].classList.contains("active")) {
           paras[a].classList.remove("active");
@@ -232,7 +205,6 @@ var hyperaudiolite = (function () {
       }
 
       // set current word and para to active
-
       if (l > 0) {
         wordArr[l-1].n.classList.add("active");
         wordArr[l-1].n.parentNode.classList.add("active");
@@ -241,9 +213,7 @@ var hyperaudiolite = (function () {
       interval = parseInt(wordArr[l].n.getAttribute("data-m") - player.currentTime*1000);
 
       // Establish current paragraph index
-
       var currentParaIndex;
-
       for (var a = 0; a < paras.length; a++) {
         if (paras[a].classList.contains("active")) {
           currentParaIndex = a;
@@ -252,7 +222,6 @@ var hyperaudiolite = (function () {
       }
 
       var scrollNode = null;
-
       if (l > 0) {
         scrollNode = wordArr[l-1].n.parentNode;
 
@@ -275,15 +244,12 @@ var hyperaudiolite = (function () {
           }
 
           newPara = true;
-
           paraIndex = currentParaIndex;
         }
       }
 
-      //minimizedMode is still experimental - it changes document.title upon every new word
-
+      // minimizedMode is still experimental - it changes document.title upon every new word
       if (minimizedMode) {
-
         var elements = document.getElementsByTagName('span');
         var currentWord = "";
         var lastWordIndex = wordIndex;
@@ -310,15 +276,13 @@ var hyperaudiolite = (function () {
         checkPlayHead();
       }, interval+1); // +1 to avoid rounding issues (better to be over than under)
     }
-
   }
 
-  hal.init = function(transcriptId, mediaElementId, minimizedMode) {
-    transcript = document.getElementById(transcriptId);
-    init(mediaElementId, minimizedMode);
+  hal.init = function(transcriptSelector, mediaElementSelector, minimizedMode) {
+    transcript = document.querySelector(transcriptSelector);
+    init(mediaElementSelector, minimizedMode);
     //set minimizedMode is an experimental feature
   }
 
   return hal;
-
 })();
