@@ -2,7 +2,7 @@
   background-color: #f6f6f8;
   padding: 1em;
   position: relative;
-  width: 80%;
+  width: 100%; /* do not change width */
   height: 400px;
   overflow-y: scroll;
 }
@@ -84,17 +84,17 @@ audio.hyperplayer {
 
 .hypertranscript::-webkit-scrollbar-track
 {
-	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	background-color: #F5F5F5;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
 }
 
 .hypertranscript::-webkit-scrollbar
 {
-	width: 6px;
-	background-color: #aeafb1;
+  width: 6px;
+  background-color: #aeafb1;
 }
 
 .hypertranscript::-webkit-scrollbar-thumb
 {
-	background-color: #e20400;
+  background-color: #e20400;
 }

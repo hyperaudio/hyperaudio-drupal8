@@ -230,9 +230,9 @@ class HyperaudioPlayerFormatter extends FormatterBase {
        }
        
        if (isset($paraData['start'])) {
-         $para->setAttribute('data-m', 1000 * $paraData['start']);
+         // $para->setAttribute('data-m', 1000 * $paraData['start']);
          $para->setAttribute('data-tc', gmdate("H:i:s", $paraData['start']));
-         if (isset($paraData['end'])) $para->setAttribute('data-d', 1000 * ($paraData['end'] - $paraData['start']));
+         // if (isset($paraData['end'])) $para->setAttribute('data-d', 1000 * ($paraData['end'] - $paraData['start']));
        }
 
       foreach ($transcript['content']['words'] as $wordData) {
