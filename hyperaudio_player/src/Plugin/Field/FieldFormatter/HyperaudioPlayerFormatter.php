@@ -43,7 +43,7 @@ class HyperaudioPlayerFormatter extends FormatterBase {
       "transcript_selector" => ".hypertranscript",
     ] + parent::defaultSettings();
   }
-  
+
   /**
    * {@inheritdoc}
    */
@@ -54,35 +54,35 @@ class HyperaudioPlayerFormatter extends FormatterBase {
       '#type' => 'markup',
       '#markup' => '<h3>' . $this->t('Hyperaudio Player') . '</h3>',
     ];
-    
+
     $elements['player'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Media player'),
       '#default_value' => $this->getSetting('player'),
       '#description' => $this->t('Show media player?'),
     ];
-    
+
     $elements['video'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Video player'),
       '#default_value' => $this->getSetting('video'),
       '#description' => $this->t('Use video player instead of audio.'),
     ];
-    
+
     $elements['player_class'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Class attribute of the media player'),
       '#default_value' => $this->getSetting('player_class'),
       '#size' => 10,
     ];
-    
+
     $elements['player_selector'] = [
       '#type' => 'textfield',
       '#title' => $this->t('CSS selector to identify the media player'),
       '#default_value' => $this->getSetting('player_selector'),
       '#size' => 10,
     ];
-    
+
     $elements['player_style'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Style attribute of the media player'),
@@ -90,7 +90,7 @@ class HyperaudioPlayerFormatter extends FormatterBase {
       '#description' => $this->t('Use this for inline styles.'),
       '#size' => 10,
     ];
-    
+
     $elements['transcript_class'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Class attribute transcript container'),
@@ -98,14 +98,14 @@ class HyperaudioPlayerFormatter extends FormatterBase {
       '#description' => $this->t('Alter this to accomodate multiple transcripts in the page.'),
       '#size' => 10,
     ];
-    
+
     $elements['transcript_selector'] = [
       '#type' => 'textfield',
       '#title' => $this->t('CSS selector to identify the transcript container'),
       '#default_value' => $this->getSetting('transcript_selector'),
       '#size' => 10,
     ];
-    
+
     $elements['transcript_style'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Style attribute of the transcript container'),
@@ -113,7 +113,7 @@ class HyperaudioPlayerFormatter extends FormatterBase {
       '#description' => $this->t('Use this for inline styles.'),
       '#size' => 10,
     ];
-    
+
     return $elements;
   }
 
@@ -122,20 +122,20 @@ class HyperaudioPlayerFormatter extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = [];
-    
+
     $player = $this->getSetting('player');
     $video = $this->getSetting('video');
-    
+
     if ($player) {
       if ($video) {
         $summary[] = $this->t('Video class(@player_class) style(@player_style) selector(@player_selector)', ['@player_class' => $this->getSetting('player_class'), '@player_style' => $this->getSetting('player_style'), '@player_selector' => $this->getSetting('player_selector')]);
       } else {
-        $summary[] = $this->t('Audio class(@player_class) style(@player_style) selector(@player_selector)', ['@player_class' => $this->getSetting('player_class'), '@player_style' => $this->getSetting('player_style'), '@player_selector' => $this->getSetting('player_selector')]); 
+        $summary[] = $this->t('Audio class(@player_class) style(@player_style) selector(@player_selector)', ['@player_class' => $this->getSetting('player_class'), '@player_style' => $this->getSetting('player_style'), '@player_selector' => $this->getSetting('player_selector')]);
       }
     } else {
-      $summary[] = $this->t('External player selector(@player_selector)', ['@player_selector' => $this->getSetting('player_selector')]); 
+      $summary[] = $this->t('External player selector(@player_selector)', ['@player_selector' => $this->getSetting('player_selector')]);
     }
-    
+
     $summary[] = $this->t('Transcript class(@transcript_class) style(@transcript_style) selector(@transcript_selector)', ['@transcript_class' => $this->getSetting('transcript_class'), '@transcript_style' => $this->getSetting('transcript_style'), '@transcript_selector' => $this->getSetting('transcript_selector')]);
 
     return $summary;
@@ -144,17 +144,33 @@ class HyperaudioPlayerFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
+    \Drupal::service('page_cache_kill_switch')->trigger();
+
     $element = [];
     $settings = $this->getSettings();
 
     $player = (int) $settings['player'] ? TRUE : FALSE;
     $video = (int) $settings['video'] ? TRUE : FALSE;
-    
+
+    $t = \Drupal::request()->query->get('t');
+
+    $start = 0;
+    $end = 0;
+    if ($t !== '') {
+      $tt = explode(',', $t);
+      if (isset($tt[0])) $start = $tt[0];
+      if (isset($tt[1])) $end = $tt[1];
+    }
+
     foreach ($items as $delta => $item) {
       $data = json_decode($item->value, TRUE);
-      
+
       $element[$delta] = [
+        // '#cache' => ['max-age' => 0,],
+        // '#cache' => ['contexts' => ['url.query_args:t']],
+        '#cache' => ['contexts' => ['url']],
         '#theme' => 'hyperaudio_player_output',
+        '#selection' => $start . ',' . $end,
         '#player' => $player,
         '#video' => $video,
         '#player_class' => ['#plain_text' => $settings['player_class']],
@@ -181,24 +197,35 @@ class HyperaudioPlayerFormatter extends FormatterBase {
     $poster_height = $transcript['poster']['height'];
     $desc = "";
     $current_uri = \Drupal::request()->getUri();
+    $hash = sha1($current_uri);
     $t = \Drupal::request()->query->get('t');
 
-    $start = 0;
-    $end = 20;
-    if ($t !== '') {
+    if (isset($t) && $t !== '') {
+      $start = 0;
+      $end = 0;
+
       $tt = explode(',', $t);
       if (isset($tt[0])) $start = $tt[0];
       if (isset($tt[1])) $end = $tt[1];
-    }
-    foreach ($transcript['content']['words'] as $wordData) {
-      if (! isset($wordData['start'])) continue;
-      if ($wordData['start'] < $start || $wordData['start'] >= $end) {
-        continue;
+
+      foreach ($transcript['content']['words'] as $wordData) {
+        if (! isset($wordData['start'])) continue;
+        if ($wordData['start'] < $start || $wordData['start'] >= $end) {
+          continue;
+        }
+        $desc .= $wordData['text'] . ' ';
       }
-      $desc .= $wordData['text'] . ' ';
+    } else {
+      $wordCount = 0;
+      foreach ($transcript['content']['words'] as $wordData) {
+        if (! isset($wordData['start'])) continue;
+        $wordCount++;
+        $desc .= $wordData['text'] . ' ';
+        if ($wordCount > 50) break;
+      }
     }
 
-    $tempstore = \Drupal::service('user.private_tempstore')->get('hyperaudio_player');
+    $tempstore = \Drupal::service('user.private_tempstore')->get('hyperaudio_player~' . $hash);
     $tempstore->set('media', $media);
     $tempstore->set('media_width', $media_width);
     $tempstore->set('media_height', $media_height);
@@ -207,8 +234,8 @@ class HyperaudioPlayerFormatter extends FormatterBase {
     $tempstore->set('poster_height', $poster_height);
     $tempstore->set('title', $title);
     $tempstore->set('desc', $desc);
-    $tempstore->set('uri', $current_uri);
-    
+    // $tempstore->set('uri', $current_uri);
+
     $html5 = new HTML5();
     $doc = $html5->loadHTML('<html></html>');
     $article = $doc->createElement('article');
@@ -218,7 +245,7 @@ class HyperaudioPlayerFormatter extends FormatterBase {
 
     foreach ($transcript['content']['paragraphs'] as $paraData) {
       $para = $doc->createElement('p');
-      
+
       // create speaker label
       if (isset($paraData['speaker'])) {
         $speaker = $doc->createElement('span');
@@ -228,7 +255,7 @@ class HyperaudioPlayerFormatter extends FormatterBase {
         $para->appendChild($speaker);
         $para->appendChild($doc->createTextNode(' ')); // FIXME extra space past speaker element
        }
-       
+
        if (isset($paraData['start'])) {
          // $para->setAttribute('data-m', 1000 * $paraData['start']);
          $para->setAttribute('data-tc', gmdate("H:i:s", $paraData['start']));

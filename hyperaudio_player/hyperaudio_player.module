@@ -13,6 +13,7 @@ function hyperaudio_player_theme() {
   return [
     'hyperaudio_player_output' => [
       'variables' => [
+        'selection' => NULL,
         'player' => NULL,
         'video' => NULL,
         'player_class' => NULL,
@@ -40,13 +41,15 @@ function metaTag(array &$page, $name, $value) {
         'content' => $value,
       )
     ),
-    // '#cache' => ['contexts' => ['url.query_args:t']],
     'og' . ucfirst($name)
   ];
 }
 
 function hyperaudio_player_page_attachments(array &$page) {
-  $tempstore = \Drupal::service('user.private_tempstore')->get('hyperaudio_player');
+  $current_uri = \Drupal::request()->getUri();
+  $hash = sha1($current_uri);
+
+  $tempstore = \Drupal::service('user.private_tempstore')->get('hyperaudio_player~' . $hash);
 
   $media = $tempstore->get('media');
   $media_width = $tempstore->get('media_width');
@@ -58,7 +61,7 @@ function hyperaudio_player_page_attachments(array &$page) {
 
   $title = $tempstore->get('title');
   $desc = $tempstore->get('desc');
-  $uri = $tempstore->get('uri');
+  $uri = $current_uri; // $tempstore->get('uri');
 
   metaTag($page, "og:locale", "en_US");
   metaTag($page, "og:title", $title);
@@ -78,15 +81,6 @@ function hyperaudio_player_page_attachments(array &$page) {
 
   metaTag($page, "fb:app_id", "177867219463585"); // TODO: move to settings
   metaTag($page, "fb:admins", "754413412"); // TODO: move to settings
-
-//  $page['#attached']['html_head'][] = [array('#tag' => 'meta', '#attributes' => array(
-//    'property' => 'fb:app_id',
-//    'content' => "177867219463585",
-//  )), 'fbApp_id'];
-//  $page['#attached']['html_head'][] = [array('#tag' => 'meta', '#attributes' => array(
-//    'property' => 'fb:admins',
-//    'content' => "754413412",
-//  )), 'fbAdmins'];
 
   metaTag($page, "twitter:card", "summary");
   metaTag($page, "twitter:site", "@studsarchive");

@@ -6,7 +6,7 @@
   {% endif %}
 {% endif %}
 
-<div class="{{ transcript_class }}" style="{{ transcript_style }}" data-player={{ player_selector }}>{{ transcript | raw }}</div>
+<div class="{{ transcript_class }}" style="{{ transcript_style }}" data-player="{{ player_selector }}" data-selection="{{ selection }}">{{ transcript | raw }}</div>
 
 {{ attach_library('hyperaudio_player/hyperaudio_player') }}
 <script>
@@ -14,7 +14,7 @@ window.onload = function() {
   // minimizedMode is still experimental
   var minimizedMode = true;
   hyperaudiolite.init("{{ transcript_selector }}", "{{ player_selector }}", minimizedMode);
-  
+
   if (ShareThis) {
      ShareThis({
        sharers: [ ShareThisViaTwitter, ShareThisViaFacebook ],
