@@ -255,6 +255,7 @@ class HyperaudioPlayerFormatter extends FormatterBase {
     }
 
     $tempstore = \Drupal::service('user.private_tempstore')->get('hyperaudio_player~' . $hash);
+    $tempstore->set('metadata', $settings['metadata']);
     $tempstore->set('media', $media);
     $tempstore->set('media_width', $media_width);
     $tempstore->set('media_height', $media_height);

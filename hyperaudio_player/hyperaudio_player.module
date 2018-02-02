@@ -57,8 +57,9 @@ function hyperaudio_player_page_attachments(array &$page) {
 
   $tempstore = \Drupal::service('user.private_tempstore')->get('hyperaudio_player~' . $hash);
   if (!isset($tempstore)) return;
-  if (!$tempstore->get('metadata')) return; // should work for 0 too
-  if ($tempstore->get('metadata') == 1 && null != \Drupal::request()->query->get('t')) return;
+
+  if (null === $tempstore->get('metadata') || $tempstore->get('metadata') == '' || $tempstore->get('metadata') == 0) return;
+  if ($tempstore->get('metadata') == 1 && (null === \Drupal::request()->query->get('t') || \Drupal::request()->query->get('t') == '')) return;
 
   $media = $tempstore->get('media');
   $media_width = $tempstore->get('media_width');
@@ -70,7 +71,6 @@ function hyperaudio_player_page_attachments(array &$page) {
 
   $title = $tempstore->get('title');
   $desc = $tempstore->get('desc');
-  $uri = $current_uri;
 
   $fb_app_id = $tempstore->get('fb_app_id');
   $fb_admins = $tempstore->get('fb_admins');
