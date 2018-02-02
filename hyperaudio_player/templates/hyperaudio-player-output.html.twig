@@ -1,19 +1,17 @@
-{% if player %}
-  {% if video %}
-    <video class="{{ player_class }}"  style="{{ player_style }}" src="{{ media }}" poster="{{ poster }}" type="video/mp4" controls preload></video>
-  {% else %}
-    <audio class="{{ player_class }}" style="{{ player_style }}" src="{{ media }}" type="audio/mp4" controls preload></audio>
-  {% endif %}
+{% if mode == 2 %}
+<video class="{{ player_class }}"  style="{{ player_style }}" src="{{ media }}" poster="{{ poster }}" type="video/mp4" controls preload></video>
+{% endif %}
+{% if mode == 1 %}
+<audio class="{{ player_class }}" style="{{ player_style }}" src="{{ media }}" type="audio/mp4" controls preload></audio>
 {% endif %}
 
 <div class="{{ transcript_class }}" style="{{ transcript_style }}" data-player="{{ player_selector }}" data-selection="{{ selection }}">{{ transcript | raw }}</div>
 
+{% if mode > 0 %}
 {{ attach_library('hyperaudio_player/hyperaudio_player') }}
 <script>
 window.onload = function() {
-  // minimizedMode is still experimental
-  var minimizedMode = true;
-  hyperaudiolite.init("{{ transcript_selector }}", "{{ player_selector }}", minimizedMode);
+  hyperaudiolite.init("{{ transcript_selector }}", "{{ player_selector }}", true);
 
   if (ShareThis) {
      ShareThis({
@@ -23,3 +21,6 @@ window.onload = function() {
   }
 }
 </script>
+{% else %}
+{{ attach_library('hyperaudio_player/hyperaudio_transcript') }}
+{% endif %}

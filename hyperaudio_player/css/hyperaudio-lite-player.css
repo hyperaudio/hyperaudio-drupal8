@@ -9,11 +9,11 @@
 
 video.hyperplayer {
   z-index: 5000000;
-  position:relative; 
+  position:relative;
   width: 80%;
 /*  height: ;*/
 }
-  
+
 audio.hyperplayer {
   z-index: 5000000;
   position:relative;
@@ -66,14 +66,6 @@ audio.hyperplayer {
 
 .hypertranscript [data-m] {
   cursor: pointer;
-}
-
-.hypertranscript .speaker {
-/*  font-weight: bold;*/
-}
-
-.hypertranscript .speaker:after {
-  content: ':';
 }
 
 .hypertranscript p[data-tc]:before {

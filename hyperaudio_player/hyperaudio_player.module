@@ -13,9 +13,9 @@ function hyperaudio_player_theme() {
   return [
     'hyperaudio_player_output' => [
       'variables' => [
+        'mode' => NULL,
+        'metadata' => NULL,
         'selection' => NULL,
-        'player' => NULL,
-        'video' => NULL,
         'player_class' => NULL,
         'player_style' => NULL,
         'player_selector' => NULL,
@@ -25,14 +25,19 @@ function hyperaudio_player_theme() {
         'transcript_class' => NULL,
         'transcript_style' => NULL,
         'transcript_selector' => NULL,
+        'fb_app_id' => NULL,
+        'fb_admins' => NULL,
+        'tw_site' => NULL,
+        'site_name' => NULL,
       ],
       'template' => 'hyperaudio-player-output',
     ],
   ];
 }
 
-
 function metaTag(array &$page, $name, $value) {
+  if (!isset($value) && $value != '') return;
+
   $page['#attached']['html_head'][] = [
     array(
       '#tag' => 'meta',
@@ -46,10 +51,14 @@ function metaTag(array &$page, $name, $value) {
 }
 
 function hyperaudio_player_page_attachments(array &$page) {
-  $current_uri = \Drupal::request()->getUri();
-  $hash = sha1($current_uri);
+  if (!isset($page)) return;
+  $uri = \Drupal::request()->getUri();
+  $hash = sha1($uri);
 
   $tempstore = \Drupal::service('user.private_tempstore')->get('hyperaudio_player~' . $hash);
+  if (!isset($tempstore)) return;
+  if (!$tempstore->get('metadata')) return; // should work for 0 too
+  if ($tempstore->get('metadata') == 1 && null != \Drupal::request()->query->get('t')) return;
 
   $media = $tempstore->get('media');
   $media_width = $tempstore->get('media_width');
@@ -61,31 +70,38 @@ function hyperaudio_player_page_attachments(array &$page) {
 
   $title = $tempstore->get('title');
   $desc = $tempstore->get('desc');
-  $uri = $current_uri; // $tempstore->get('uri');
+  $uri = $current_uri;
+
+  $fb_app_id = $tempstore->get('fb_app_id');
+  $fb_admins = $tempstore->get('fb_admins');
+  $tw_site = $tempstore->get('tw_site');
+  $site_name = $tempstore->get('site_name');
 
   metaTag($page, "og:locale", "en_US");
   metaTag($page, "og:title", $title);
-  metaTag($page, "og:site_name", "Studs Terkel Radio Archive");
-  metaTag($page, "og:type", "video.other");
+
+  metaTag($page, "og:site_name", $site_name);
+  metaTag($page, "og:type", "video.other"); // FIXME
+
   metaTag($page, "og:description", $desc);
   metaTag($page, "og:url", $uri);
+
   metaTag($page, "og:video:url", $media);
   metaTag($page, "og:video:secure_url", $media);
   metaTag($page, "og:video:width", $media_width);
   metaTag($page, "og:video:height", $media_height);
-  metaTag($page, "og:video:type", "video/mp4"); // TBD: what do to with audio?
+  metaTag($page, "og:video:type", "video/mp4"); // FIXME
 
   metaTag($page, "og:image", $poster);
   metaTag($page, "og:image:width", $poster_width);
   metaTag($page, "og:image:height", $poster_height);
 
-  metaTag($page, "fb:app_id", "177867219463585"); // TODO: move to settings
-  metaTag($page, "fb:admins", "754413412"); // TODO: move to settings
+  metaTag($page, "fb:app_id", $fb_app_id);
+  metaTag($page, "fb:admins", $fb_admins);
 
   metaTag($page, "twitter:card", "summary");
-  metaTag($page, "twitter:site", "@studsarchive");
+  metaTag($page, "twitter:site", $tw_site);
   metaTag($page, "twitter:title", $title);
   metaTag($page, "twitter:description", $desc);
   metaTag($page, "twitter:image", $poster);
-
 }

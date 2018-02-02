@@ -2,6 +2,7 @@ hyperaudio_player:
   css:
     component:
       css/hyperaudio-lite-player.css: {}
+      css/hyperaudio-lite-transcript.css: {}
       css/share-this.css: { minified: true }
   js:
     js/velocity.js: {}
@@ -11,3 +12,8 @@ hyperaudio_player:
     js/URI.js: { minified: true }
     js/hyperaudio-lite.js: {}
     js/hyperaudio.sharect.min.js: { minified: true }
+
+hyperaudio_transcript:
+  css:
+    component:
+      css/hyperaudio-lite-transcript.css: {}

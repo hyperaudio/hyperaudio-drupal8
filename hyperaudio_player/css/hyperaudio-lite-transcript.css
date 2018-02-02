@@ -1,0 +1,7 @@
+.hypertranscript .speaker {
+/*  font-weight: bold;*/
+}
+
+.hypertranscript .speaker:after {
+  content: ':';
+}

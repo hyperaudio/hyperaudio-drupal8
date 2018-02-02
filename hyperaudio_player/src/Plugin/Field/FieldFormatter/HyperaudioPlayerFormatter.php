@@ -31,8 +31,8 @@ class HyperaudioPlayerFormatter extends FormatterBase {
    */
   public static function defaultSettings() {
     return [
-      "player" => "1",
-      "video" => "0",
+      "mode" => "1",
+      "metadata" => "1",
       "player_class" => "hyperplayer",
       "player_style" => "",
       "player_selector" => ".hyperplayer",
@@ -41,6 +41,10 @@ class HyperaudioPlayerFormatter extends FormatterBase {
       "transcript_class" => "hypertranscript",
       "transcript_style" => "",
       "transcript_selector" => ".hypertranscript",
+      "fb_app_id" => NULL,
+      "fb_admins" => NULL,
+      "tw_site" => NULL,
+      "site_name" => NULL,
     ] + parent::defaultSettings();
   }
 
@@ -55,18 +59,11 @@ class HyperaudioPlayerFormatter extends FormatterBase {
       '#markup' => '<h3>' . $this->t('Hyperaudio Player') . '</h3>',
     ];
 
-    $elements['player'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Media player'),
-      '#default_value' => $this->getSetting('player'),
-      '#description' => $this->t('Show media player?'),
-    ];
-
-    $elements['video'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Video player'),
-      '#default_value' => $this->getSetting('video'),
-      '#description' => $this->t('Use video player instead of audio.'),
+    $elements['mode'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Render mode'),
+      '#options' => array(t('plain transcript'), t('audio + hypertranscript'), t('video + hypertranscript'), t('external player + hypertranscript')),
+      '#default_value' => $this->getSetting('mode'),
     ];
 
     $elements['player_class'] = [
@@ -114,6 +111,41 @@ class HyperaudioPlayerFormatter extends FormatterBase {
       '#size' => 10,
     ];
 
+    $elements['metadata'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Inject metadata'),
+      '#options' => array(t('never'), t('only on links with media fragment (?t=start,stop)'), t('always')),
+      '#default_value' => $this->getSetting('metadata'),
+    ];
+
+    $elements['fb_app_id'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Facebook App Id'),
+      '#default_value' => $this->getSetting('fb_app_id'),
+      '#size' => 10,
+    ];
+
+    $elements['fb_admins'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Facebook Admins'),
+      '#default_value' => $this->getSetting('fb_admins'),
+      '#size' => 10,
+    ];
+
+    $elements['tw_site'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Twitter site'),
+      '#default_value' => $this->getSetting('tw_site'),
+      '#size' => 10,
+    ];
+
+    $elements['site_name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Open Graph site_name'),
+      '#default_value' => $this->getSetting('site_name'),
+      '#size' => 10,
+    ];
+
     return $elements;
   }
 
@@ -123,18 +155,18 @@ class HyperaudioPlayerFormatter extends FormatterBase {
   public function settingsSummary() {
     $summary = [];
 
-    $player = $this->getSetting('player');
-    $video = $this->getSetting('video');
+    // $player = $this->getSetting('player');
+    // $video = $this->getSetting('video');
 
-    if ($player) {
-      if ($video) {
-        $summary[] = $this->t('Video class(@player_class) style(@player_style) selector(@player_selector)', ['@player_class' => $this->getSetting('player_class'), '@player_style' => $this->getSetting('player_style'), '@player_selector' => $this->getSetting('player_selector')]);
-      } else {
-        $summary[] = $this->t('Audio class(@player_class) style(@player_style) selector(@player_selector)', ['@player_class' => $this->getSetting('player_class'), '@player_style' => $this->getSetting('player_style'), '@player_selector' => $this->getSetting('player_selector')]);
-      }
-    } else {
+    // if ($player) {
+    //   if ($video) {
+    //     $summary[] = $this->t('Video class(@player_class) style(@player_style) selector(@player_selector)', ['@player_class' => $this->getSetting('player_class'), '@player_style' => $this->getSetting('player_style'), '@player_selector' => $this->getSetting('player_selector')]);
+    //   } else {
+    //     $summary[] = $this->t('Audio class(@player_class) style(@player_style) selector(@player_selector)', ['@player_class' => $this->getSetting('player_class'), '@player_style' => $this->getSetting('player_style'), '@player_selector' => $this->getSetting('player_selector')]);
+    //   }
+    // } else {
       $summary[] = $this->t('External player selector(@player_selector)', ['@player_selector' => $this->getSetting('player_selector')]);
-    }
+    // }
 
     $summary[] = $this->t('Transcript class(@transcript_class) style(@transcript_style) selector(@transcript_selector)', ['@transcript_class' => $this->getSetting('transcript_class'), '@transcript_style' => $this->getSetting('transcript_style'), '@transcript_selector' => $this->getSetting('transcript_selector')]);
 
@@ -149,14 +181,10 @@ class HyperaudioPlayerFormatter extends FormatterBase {
     $element = [];
     $settings = $this->getSettings();
 
-    $player = (int) $settings['player'] ? TRUE : FALSE;
-    $video = (int) $settings['video'] ? TRUE : FALSE;
-
     $t = \Drupal::request()->query->get('t');
-
     $start = 0;
     $end = 0;
-    if ($t !== '') {
+    if ($t != '') {
       $tt = explode(',', $t);
       if (isset($tt[0])) $start = $tt[0];
       if (isset($tt[1])) $end = $tt[1];
@@ -166,13 +194,11 @@ class HyperaudioPlayerFormatter extends FormatterBase {
       $data = json_decode($item->value, TRUE);
 
       $element[$delta] = [
-        // '#cache' => ['max-age' => 0,],
-        // '#cache' => ['contexts' => ['url.query_args:t']],
         '#cache' => ['contexts' => ['url']],
         '#theme' => 'hyperaudio_player_output',
         '#selection' => $start . ',' . $end,
-        '#player' => $player,
-        '#video' => $video,
+        '#mode' =>  $settings['mode'],
+        '#metadata' => $settings['metadata'],
         '#player_class' => ['#plain_text' => $settings['player_class']],
         '#player_style' => ['#plain_text' => $settings['player_style']],
         '#player_selector' => ['#plain_text' => $settings['player_selector']],
@@ -181,13 +207,15 @@ class HyperaudioPlayerFormatter extends FormatterBase {
         '#transcript_selector' => ['#plain_text' => $settings['transcript_selector']],
         '#media' => $data['media']['url'],
         '#poster' => $data['poster']['url'],
-        '#transcript' => $this->renderTranscript($data)
+        '#transcript' => $this->renderTranscript($data, $settings),
       ];
     }
     return $element;
   }
 
-  public function renderTranscript($transcript) {
+  public function renderTranscript($transcript, $settings) {
+    $mode = $settings['mode'];
+
     $media = $transcript['media']['url'];
     $media_width = $transcript['media']['width'];
     $media_height = $transcript['media']['height'];
@@ -195,12 +223,13 @@ class HyperaudioPlayerFormatter extends FormatterBase {
     $poster = $transcript['poster']['url'];
     $poster_width = $transcript['poster']['width'];
     $poster_height = $transcript['poster']['height'];
-    $desc = "";
+
     $current_uri = \Drupal::request()->getUri();
     $hash = sha1($current_uri);
-    $t = \Drupal::request()->query->get('t');
 
-    if (isset($t) && $t !== '') {
+    $t = \Drupal::request()->query->get('t');
+    $desc = "";
+    if (isset($t) && $t != '') {
       $start = 0;
       $end = 0;
 
@@ -234,7 +263,11 @@ class HyperaudioPlayerFormatter extends FormatterBase {
     $tempstore->set('poster_height', $poster_height);
     $tempstore->set('title', $title);
     $tempstore->set('desc', $desc);
-    // $tempstore->set('uri', $current_uri);
+
+    $tempstore->set('fb_app_id', $settings['fb_app_id']);
+    $tempstore->set('fb_admins', $settings['fb_admins']);
+    $tempstore->set('tw_site', $settings['tw_site']);
+    $tempstore->set('site_name', $settings['site_name']);
 
     $html5 = new HTML5();
     $doc = $html5->loadHTML('<html></html>');
@@ -253,27 +286,29 @@ class HyperaudioPlayerFormatter extends FormatterBase {
         $speaker->appendChild($doc->createTextNode($paraData['speaker']));
 
         $para->appendChild($speaker);
-        $para->appendChild($doc->createTextNode(' ')); // FIXME extra space past speaker element
+        $para->appendChild($doc->createTextNode(' ')); // extra space past speaker element
        }
 
        if (isset($paraData['start'])) {
-         // $para->setAttribute('data-m', 1000 * $paraData['start']);
          $para->setAttribute('data-tc', gmdate("H:i:s", $paraData['start']));
-         // if (isset($paraData['end'])) $para->setAttribute('data-d', 1000 * ($paraData['end'] - $paraData['start']));
        }
 
       foreach ($transcript['content']['words'] as $wordData) {
         if (! isset($wordData['start'])) continue; // skip non-timed words
-
         if ($wordData['start'] < $paraData['start'] || $wordData['start'] >= $paraData['end']) continue;
 
-        $word = $doc->createElement('a');
+        $text = $doc->createTextNode($wordData['text'] . ' ');
 
-        $word->setAttribute('data-m', 1000 * $wordData['start']);
-        if (isset($wordData['end'])) $word->setAttribute('data-d', 1000 * ($wordData['end'] - $wordData['start']));
+        if ($mode != 0) {
+          $word = $doc->createElement('a');
+          $word->setAttribute('data-m', 1000 * $wordData['start']);
+          if (isset($wordData['end'])) $word->setAttribute('data-d', 1000 * ($wordData['end'] - $wordData['start']));
 
-        $word->appendChild($doc->createTextNode($wordData['text'] . ' '));
-        $para->appendChild($word);
+          $word->appendChild($text);
+          $para->appendChild($word);
+        } else {
+          $para->appendChild($text);
+        }
       }
       $section->appendChild($para);
     }
